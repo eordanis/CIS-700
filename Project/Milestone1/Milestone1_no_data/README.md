@@ -13,7 +13,9 @@
 
 <br>
 <br>
-<b>Name:</b>Stephanie Eordanidis, Ravjot Sachdev, Jackson Taber
+<b>Name:</b> Stephanie Eordanidis, 
+             Ravjot Sachdev, 
+             Jackson Taber
 
 
 *Summary*:  A previously developed GAN was developed and repurposed for the use of adversarial text generation. 
