@@ -1,3 +1,11 @@
+#NOTE:
+This is a zip copy of the project located at url https://github.com/msc-acse/acse-9-independent-research-project-hk-97
+this work is not my own, but is rather the basis for related works.
+
+<---Original README.md below --->
+
+
+
 ![Imperial Logo](Images/logowide.png)
 
 <p align="center">
