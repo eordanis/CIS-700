@@ -1,4 +1,8 @@
+
 ![SU College Logo](Images/SU_LOGO.jpg)
+
+
+
 
 <p align="center">
   <b> MS Syracuse University College of Engineering and Computer Science </b>   
