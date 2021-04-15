@@ -1,8 +1,6 @@
 
 ![SU College Logo](Images/SU_LOGO.jpg)
 
-
-
 <br>
 <p align="center">
   <b> MS Syracuse University College of Engineering and Computer Science </b>   
@@ -12,9 +10,12 @@
   Machine Learning and Security Masters Research Project Milestone 04/07/21-06/16/21
 </p>
 
-**Name**: Stephanie Eordanidis
-		  Ravjot Sachdev
-		  Jackson Taber
+
+<br>
+<br>
+<b>Name:</b> Stephanie Eordanidis, 
+             Ravjot Sachdev, 
+             Jackson Taber
 
 
 *Summary*:  A previously developed GAN was developed and repurposed for the use of adversarial text generation. 
