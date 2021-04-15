@@ -3,7 +3,7 @@
 
 <br>
 <p align="center">
-  <b> MS Syracuse University College of Engineering and Computer Science </b>   
+  <b> Syracuse University College of Engineering and Computer Science </b>   
 </p>
 
 <p align="center">
