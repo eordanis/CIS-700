@@ -8,6 +8,9 @@ this work is not my own, but is rather the basis for related works.
 
 ![Imperial Logo](Images/logowide.png)
 
+
+
+
 <p align="center">
   <b> MSc Applied Computational Science and Engineering </b>   
 </p>
