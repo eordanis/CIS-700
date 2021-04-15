@@ -1,8 +1,6 @@
 
 ![SU College Logo](Images/SU_LOGO.jpg)
 
-
-
 <br>
 <p align="center">
   <b> MS Syracuse University College of Engineering and Computer Science </b>   
@@ -12,6 +10,9 @@
   Machine Learning and Security Masters Research Project Milestone 04/07/21-06/16/21
 </p>
 
+
+<br>
+<br>
 **Name**: Stephanie Eordanidis
 		  Ravjot Sachdev
 		  Jackson Taber
