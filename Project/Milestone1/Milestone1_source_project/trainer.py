@@ -131,8 +131,17 @@ class Trainer():
     plt.xlabel("Epochs")
     plt.ylabel("Accuracy")
 
-    plt.plot(savgol_filter(onFakeAcc,51,3), label="Fake", c='r')
-    plt.plot(savgol_filter(onRealAcc,51,3), label="Real", c='g')
+    if onFakeAcc.size % 2 == 0:
+      window_length = onFakeAcc.size - 1
+    else:
+      window_length = onFakeAcc.size
+    plt.plot(savgol_filter(onFakeAcc,window_length,3), label="Fake", c='r')
+
+    if onRealAcc.size % 2 == 0:
+      window_length = onRealAcc.size - 1
+    else:
+      window_length = onRealAcc.size
+    plt.plot(savgol_filter(onRealAcc,window_length,3), label="Real", c='g')
     plt.plot([-10,1010], [0.5,0.5], '-', label="Expected value (0.5)", c= 'k', lw=3)
     plt.grid()
     plt.legend()
