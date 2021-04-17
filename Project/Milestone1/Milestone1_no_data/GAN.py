@@ -21,10 +21,10 @@ class GAN():
         self.discriminator_optimizer = SGD(lr=0.012)
 
         self.num_samples = datashape[0]
-        self.features = datashape[1]
-        self.seq_length = datashape[2]
+        self.features = 1
+        self.seq_length = 200
 
-        self.input_shape = (self.features, self.seq_length, 1)
+        self.input_shape = (1, self.seq_length, 1)
         self.latent_dim = 100
 
         ### Build network
