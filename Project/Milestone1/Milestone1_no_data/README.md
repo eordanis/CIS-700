@@ -38,7 +38,7 @@ This project is completed to answer the following research question:
 
 ## Repository Structure <a name="RepositoryStructure"></a>
 The repository contains:
-* `` Data\``. This contains  part of the TextData dataset obtained via kaggle source -> [url here]
+* `` TextData\``. This contains  part of the TextData dataset obtained via kaggle source -> [url here]
 
 * `` utils.py ``. Contains helper functions to create directories for storing data and images, obtaining random batches of data and plotting.
 
