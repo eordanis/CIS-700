@@ -89,6 +89,7 @@ class Rankgan(Gan):
         if self.log is not None:
             print("write to file")
             if self.epoch == 0 or self.epoch == 1:
+                self.log.write('epoch,')
                 for metric in self.metrics:
                     print(metric.get_name())
                     self.log.write(metric.get_name() + ',')

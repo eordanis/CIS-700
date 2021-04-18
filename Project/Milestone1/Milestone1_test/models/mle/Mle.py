@@ -78,6 +78,7 @@ class Mle(Gan):
             self.oracle_data_loader.create_batches(self.generator_file)
         if self.log is not None:
             if self.epoch == 0 or self.epoch == 1:
+                self.log.write('epoch,')
                 for metric in self.metrics:
                     self.log.write(metric.get_name() + ',')
                 self.log.write('\n')
