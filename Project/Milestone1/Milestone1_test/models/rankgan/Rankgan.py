@@ -110,7 +110,7 @@ class Rankgan(Gan):
         self.init_oracle_trainng()
         self.init_metric()
         self.sess.run(tf.compat.v1.global_variables_initializer())
-        self.log = open('experiment-log-rankgan.csv', 'w')
+        self.log = opent('../../results/experiment-log-rankgan.csv', 'w')
         generate_samples(self.sess, self.oracle, self.batch_size, self.generate_num, self.oracle_file)
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
@@ -213,7 +213,7 @@ class Rankgan(Gan):
         self.init_cfg_metric(grammar=cfg_grammar)
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.log = open('experiment-log-rankgan-cfg.csv', 'w')
+        self.log = opent('../../results/experiment-log-rankgan-cfg.csv', 'w')
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
         self.oracle_data_loader.create_batches(self.generator_file)
@@ -314,7 +314,7 @@ class Rankgan(Gan):
 
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.log = open('experiment-log-rankgan-real.csv', 'w')
+        self.log = opent('../../results/experiment-log-rankgan-real.csv', 'w')
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
 

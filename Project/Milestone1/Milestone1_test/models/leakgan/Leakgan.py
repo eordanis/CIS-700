@@ -160,7 +160,7 @@ class Leakgan(Gan):
         self.init_metric()
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.log = open('experiment-log-leakgan.csv', 'w')
+        self.log = opent('../../results/experiment-log-leakgan.csv', 'w')
         generate_samples(self.sess, self.oracle, self.batch_size, self.generate_num, self.oracle_file)
         generate_samples_gen(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
@@ -293,7 +293,7 @@ class Leakgan(Gan):
         self.init_cfg_metric(grammar=cfg_grammar)
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.log = open('experiment-log-leakganbasic-cfg.csv', 'w')
+        self.log = opent('../../results/experiment-log-leakganbasic-cfg.csv', 'w')
         generate_samples_gen(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
         self.oracle_data_loader.create_batches(self.generator_file)
@@ -418,7 +418,7 @@ class Leakgan(Gan):
 
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.log = open('experiment-log-leakgan-real.csv', 'w')
+        self.log = opent('../../results/experiment-log-leakgan-real.csv', 'w')
         generate_samples_gen(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
 

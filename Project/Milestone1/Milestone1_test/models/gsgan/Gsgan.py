@@ -218,7 +218,7 @@ class Gsgan(Gan):
 
         self.pre_epoch_num = 0
         self.adversarial_epoch_num = 5
-        self.log = open('experiment-log-gsgan-cfg.csv', 'w')
+        self.log = open('../../results/experiment-log-gsgan-cfg.csv', 'w')
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
         self.oracle_data_loader.create_batches(self.generator_file)
