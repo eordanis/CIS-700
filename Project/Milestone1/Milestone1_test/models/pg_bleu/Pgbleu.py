@@ -94,8 +94,6 @@ class Pgbleu(Gan):
         self.init_oracle_trainng()
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.pre_epoch_num = 5
-        self.adversarial_epoch_num = 5
         self.log = open('experiment-log-pgbleu3.csv', 'w')
         generate_samples(self.sess, self.oracle, self.batch_size, self.generate_num, self.oracle_file)
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
@@ -108,7 +106,7 @@ class Pgbleu(Gan):
             start = time()
             loss = pre_train_epoch(self.sess, self.generator, self.gen_data_loader)
             end = time()
-            print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
+            #print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
             self.add_epoch()
             if epoch % 5 == 0:
                 self.evaluate()
@@ -118,7 +116,7 @@ class Pgbleu(Gan):
         self.reward = Reward(self.oracle_file)
         for epoch in range(self.adversarial_epoch_num):
             start = time()
-            print('epoch:' + str(epoch))
+            #print('epoch:' + str(epoch))
             for index in range(10):
                 samples = self.generator.generate(self.sess)
                 rewards = self.reward.get_reward(samples)
@@ -129,7 +127,7 @@ class Pgbleu(Gan):
                 _ = self.sess.run(self.generator.g_updates, feed_dict=feed)
             end = time()
             self.add_epoch()
-            print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
+            #print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
             if epoch % 5 == 0 or epoch == self.adversarial_epoch_num - 1:
                 self.evaluate()
 

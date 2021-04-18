@@ -102,8 +102,6 @@ class Maligan(Gan):
         self.init_metric()
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.pre_epoch_num = 5
-        self.adversarial_epoch_num = 5
         self.log = open('experiment-log-maligan-basic.csv', 'w')
         generate_samples(self.sess, self.oracle, self.batch_size, self.generate_num, self.oracle_file)
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
@@ -115,7 +113,7 @@ class Maligan(Gan):
             start = time()
             loss = pre_train_epoch(self.sess, self.generator, self.gen_data_loader)
             end = time()
-            print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
+            #print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
             self.add_epoch()
             if epoch % 5 == 0:
                 self.evaluate()
@@ -123,14 +121,14 @@ class Maligan(Gan):
         print('start pre-train discriminator:')
         self.reset_epoch()
         for epoch in range(self.pre_epoch_num):
-            print('epoch:' + str(epoch))
+            #print('epoch:' + str(epoch))
             self.train_discriminator()
 
         self.reset_epoch()
         print('adversarial training:')
         self.reward = Reward()
         for epoch in range(self.adversarial_epoch_num):
-            # print('epoch:' + str(epoch))
+            # #print('epoch:' + str(epoch))
             start = time()
             for index in range(50):
                 samples = self.generator.generate(self.sess)
@@ -142,7 +140,7 @@ class Maligan(Gan):
                 _ = self.sess.run(self.generator.g_updates, feed_dict=feed)
             end = time()
             self.add_epoch()
-            print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
+            #print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
             if epoch % 5 == 0 or epoch == self.adversarial_epoch_num - 1:
                 self.evaluate()
             for _ in range(15):
@@ -202,8 +200,6 @@ class Maligan(Gan):
         self.init_cfg_metric(grammar=cfg_grammar)
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.pre_epoch_num = 5
-        self.adversarial_epoch_num = 5
         self.log = open('experiment-log-maliganbasic-cfg.csv', 'w')
         # generate_samples(self.sess, self.oracle, self.batch_size, self.generate_num, self.oracle_file)
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
@@ -214,7 +210,7 @@ class Maligan(Gan):
             start = time()
             loss = pre_train_epoch(self.sess, self.generator, self.gen_data_loader)
             end = time()
-            print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
+            #print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
             self.add_epoch()
             if epoch % 5 == 0:
                 generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
@@ -224,14 +220,14 @@ class Maligan(Gan):
         print('start pre-train discriminator:')
         self.reset_epoch()
         for epoch in range(self.pre_epoch_num * 3):
-            print('epoch:' + str(epoch))
+            #print('epoch:' + str(epoch))
             self.train_discriminator()
 
         self.reset_epoch()
         print('adversarial training:')
         self.reward = Reward()
         for epoch in range(self.adversarial_epoch_num):
-            # print('epoch:' + str(epoch))
+            # #print('epoch:' + str(epoch))
             start = time()
             for index in range(1):
                 samples = self.generator.generate(self.sess)
@@ -243,7 +239,7 @@ class Maligan(Gan):
                 _ = self.sess.run(self.generator.g_updates, feed_dict=feed)
             end = time()
             self.add_epoch()
-            print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
+            #print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
             if epoch % 5 == 0 or epoch == self.adversarial_epoch_num - 1:
                 generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
                 get_cfg_test_file()
@@ -305,8 +301,6 @@ class Maligan(Gan):
 
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.pre_epoch_num = 5
-        self.adversarial_epoch_num = 5
         self.log = open('experiment-log-maligan-real.csv', 'w')
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
@@ -316,7 +310,7 @@ class Maligan(Gan):
             start = time()
             loss = pre_train_epoch(self.sess, self.generator, self.gen_data_loader)
             end = time()
-            print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
+            #print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
             self.add_epoch()
             if epoch % 5 == 0:
                 generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
@@ -326,14 +320,14 @@ class Maligan(Gan):
         print('start pre-train discriminator:')
         self.reset_epoch()
         for epoch in range(self.pre_epoch_num):
-            print('epoch:' + str(epoch))
+            #print('epoch:' + str(epoch))
             self.train_discriminator()
 
         self.reset_epoch()
         print('adversarial training:')
         self.reward = Reward()
         for epoch in range(self.adversarial_epoch_num):
-            # print('epoch:' + str(epoch))
+            # #print('epoch:' + str(epoch))
             start = time()
             for index in range(1):
                 samples = self.generator.generate(self.sess)
@@ -345,7 +339,7 @@ class Maligan(Gan):
                 _ = self.sess.run(self.generator.g_updates, feed_dict=feed)
             end = time()
             self.add_epoch()
-            print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
+            #print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
             if epoch % 5 == 0 or epoch == self.adversarial_epoch_num - 1:
                 generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
                 get_real_test_file()

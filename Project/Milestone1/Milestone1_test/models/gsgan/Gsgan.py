@@ -137,7 +137,7 @@ class Gsgan(Gan):
             start = time()
             loss = pre_train_epoch(self.sess, self.generator, self.gen_data_loader)
             end = time()
-            print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
+            ##print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
             self.add_epoch()
             if epoch % 5 == 0:
                 generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
@@ -146,19 +146,19 @@ class Gsgan(Gan):
         print('start pre-train discriminator:')
         self.reset_epoch()
         for epoch in range(self.pre_epoch_num):
-            print('epoch:' + str(epoch))
+            ##print('epoch:' + str(epoch))
             self.train_discriminator()
 
         self.reset_epoch()
         print('adversarial training:')
         for epoch in range(self.adversarial_epoch_num):
-            # print('epoch:' + str(epoch))
+            # ##print('epoch:' + str(epoch))
             start = time()
             for index in range(10):
                 self.generator.unsupervised_train(self.sess)
             end = time()
             self.add_epoch()
-            print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
+            ##print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
             if epoch % 5 == 0 or epoch == self.adversarial_epoch_num - 1:
                 generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
                 self.evaluate()
@@ -227,7 +227,7 @@ class Gsgan(Gan):
             start = time()
             loss = pre_train_epoch(self.sess, self.generator, self.gen_data_loader)
             end = time()
-            print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
+            ##print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
             self.add_epoch()
             if epoch % 5 == 0:
                 generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
@@ -237,19 +237,19 @@ class Gsgan(Gan):
         print('start pre-train discriminator:')
         self.reset_epoch()
         for epoch in range(self.pre_epoch_num * 3):
-            print('epoch:' + str(epoch))
+            ##print('epoch:' + str(epoch))
             self.train_discriminator()
 
         self.reset_epoch()
         print('adversarial training:')
         for epoch in range(self.adversarial_epoch_num):
-            # print('epoch:' + str(epoch))
+            # ##print('epoch:' + str(epoch))
             start = time()
             for index in range(10):
                 self.generator.unsupervised_train(self.sess)
             end = time()
             self.add_epoch()
-            print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
+            ##print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
             if epoch % 5 == 0 or epoch == self.adversarial_epoch_num - 1:
                 generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
                 get_cfg_test_file()
@@ -322,7 +322,7 @@ class Gsgan(Gan):
             start = time()
             loss = pre_train_epoch(self.sess, self.generator, self.gen_data_loader)
             end = time()
-            print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
+            ##print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
             self.add_epoch()
             if epoch % 5 == 0:
                 generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
@@ -332,19 +332,19 @@ class Gsgan(Gan):
         print('start pre-train discriminator:')
         self.reset_epoch()
         for epoch in range(self.pre_epoch_num):
-            print('epoch:' + str(epoch))
+            ##print('epoch:' + str(epoch))
             self.train_discriminator()
 
         self.reset_epoch()
         print('adversarial training:')
         for epoch in range(self.adversarial_epoch_num):
-            # print('epoch:' + str(epoch))
+            # ##print('epoch:' + str(epoch))
             start = time()
             for index in range(10):
                 self.generator.unsupervised_train(self.sess)
             self.add_epoch()
             end = time()
-            print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
+            ##print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
             if epoch % 5 == 0 or epoch == self.adversarial_epoch_num - 1:
                 generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
                 get_real_test_file()

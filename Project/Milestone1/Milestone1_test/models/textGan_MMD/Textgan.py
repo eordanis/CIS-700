@@ -142,8 +142,6 @@ class TextganMmd(Gan):
         self.init_metric()
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.pre_epoch_num = 5
-        self.adversarial_epoch_num = 5
         self.log = open('experiment-log-textgan.csv', 'w')
         oracle_code = generate_samples(self.sess, self.oracle, self.batch_size, self.generate_num, self.oracle_file)
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
@@ -155,7 +153,7 @@ class TextganMmd(Gan):
             start = time()
             loss = pre_train_epoch(self.sess, self.generator, self.gen_data_loader)
             end = time()
-            print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
+            #print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
             self.add_epoch()
             if epoch % 5 == 0:
                 generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
@@ -164,19 +162,19 @@ class TextganMmd(Gan):
         print('start pre-train discriminator:')
         self.reset_epoch()
         for epoch in range(self.pre_epoch_num):
-            print('epoch:' + str(epoch))
+            #print('epoch:' + str(epoch))
             self.train_discriminator()
 
         self.reset_epoch()
         del oracle_code
         print('adversarial training:')
         for epoch in range(self.adversarial_epoch_num):
-            # print('epoch:' + str(epoch))
+            # #print('epoch:' + str(epoch))
             start = time()
             for index in range(100):
                 self.train_generator()
             end = time()
-            print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
+            #print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
             self.add_epoch()
             if epoch % 5 == 0 or epoch == self.adversarial_epoch_num - 1:
                 generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
@@ -239,8 +237,6 @@ class TextganMmd(Gan):
         self.init_cfg_metric(grammar=cfg_grammar)
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.pre_epoch_num = 5
-        self.adversarial_epoch_num = 5
         self.log = open('experiment-log-textgan-cfg.csv', 'w')
         oracle_code = generate_samples(self.sess, self.generator, self.batch_size, self.generate_num,
                                        self.generator_file)
@@ -251,7 +247,7 @@ class TextganMmd(Gan):
             start = time()
             loss = pre_train_epoch(self.sess, self.generator, self.gen_data_loader)
             end = time()
-            print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
+            #print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
             self.add_epoch()
             if epoch % 5 == 0:
                 generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
@@ -261,7 +257,7 @@ class TextganMmd(Gan):
         print('start pre-train discriminator:')
         self.reset_epoch()
         for epoch in range(self.pre_epoch_num * 3):
-            print('epoch:' + str(epoch))
+            #print('epoch:' + str(epoch))
             self.train_discriminator()
 
         self.reset_epoch()
@@ -269,13 +265,13 @@ class TextganMmd(Gan):
 
         del oracle_code
         for epoch in range(self.adversarial_epoch_num):
-            # print('epoch:' + str(epoch))
+            # #print('epoch:' + str(epoch))
             start = time()
             for i in range(100):
                 self.train_generator()
             end = time()
             self.add_epoch()
-            print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
+            #print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
             if epoch % 5 == 0 or epoch == self.adversarial_epoch_num - 1:
                 generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
                 get_cfg_test_file()
@@ -348,8 +344,6 @@ class TextganMmd(Gan):
 
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.pre_epoch_num = 5
-        self.adversarial_epoch_num = 5
         self.log = open('experiment-log-textgan-real.csv', 'w')
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
@@ -359,7 +353,7 @@ class TextganMmd(Gan):
             start = time()
             loss = pre_train_epoch(self.sess, self.generator, self.gen_data_loader)
             end = time()
-            print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
+            #print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
             self.add_epoch()
             if epoch % 5 == 0:
                 generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
@@ -369,19 +363,19 @@ class TextganMmd(Gan):
         print('start pre-train discriminator:')
         self.reset_epoch()
         for epoch in range(self.pre_epoch_num):
-            print('epoch:' + str(epoch))
+            #print('epoch:' + str(epoch))
             self.train_discriminator()
         oracle_code = get_real_code()
 
 
         print('adversarial training:')
         for epoch in range(self.adversarial_epoch_num):
-            # print('epoch:' + str(epoch))
+            # #print('epoch:' + str(epoch))
             start = time()
             for index in range(100):
                 self.train_generator()
             end = time()
-            print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
+            #print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
             self.add_epoch()
             if epoch % 5 == 0 or epoch == self.adversarial_epoch_num - 1:
                 generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)

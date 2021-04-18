@@ -110,8 +110,6 @@ class Rankgan(Gan):
         self.init_oracle_trainng()
         self.init_metric()
         self.sess.run(tf.compat.v1.global_variables_initializer())
-        self.pre_epoch_num = 5
-        self.adversarial_epoch_num = 5
         self.log = open('experiment-log-rankgan.csv', 'w')
         generate_samples(self.sess, self.oracle, self.batch_size, self.generate_num, self.oracle_file)
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
@@ -124,7 +122,7 @@ class Rankgan(Gan):
             start = time()
             loss = pre_train_epoch(self.sess, self.generator, self.gen_data_loader)
             end = time()
-            print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
+            #print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
             self.add_epoch()
             if epoch % 5 == 0:
                 self.evaluate()
@@ -132,7 +130,7 @@ class Rankgan(Gan):
         print('start pre-train discriminator:')
         self.reset_epoch()
         for epoch in range(self.pre_epoch_num):
-            print('epoch:' + str(epoch))
+            #print('epoch:' + str(epoch))
             self.train_discriminator()
 
 
@@ -140,7 +138,7 @@ class Rankgan(Gan):
         self.reward = Reward(self.generator, .8)
         for epoch in range(self.adversarial_epoch_num):
             start = time()
-            # print('epoch:' + str(epoch))
+            # #print('epoch:' + str(epoch))
             for index in range(1):
                 samples = self.generator.generate(self.sess)
                 self.dis_data_loader.load_train_data(self.oracle_file, self.generator_file)
@@ -152,7 +150,7 @@ class Rankgan(Gan):
                 _ = self.sess.run(self.generator.g_updates, feed_dict=feed)
             end = time()
             self.add_epoch()
-            print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
+            #print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
             if epoch % 5 == 0 or epoch == self.adversarial_epoch_num-1:
                 generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
                 self.evaluate()
@@ -215,8 +213,6 @@ class Rankgan(Gan):
         self.init_cfg_metric(grammar=cfg_grammar)
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.pre_epoch_num = 5
-        self.adversarial_epoch_num = 5
         self.log = open('experiment-log-rankgan-cfg.csv', 'w')
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
@@ -226,7 +222,7 @@ class Rankgan(Gan):
             start = time()
             loss = pre_train_epoch(self.sess, self.generator, self.gen_data_loader)
             end = time()
-            print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
+            #print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
             self.add_epoch()
             if epoch % 5 == 0:
                 generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
@@ -236,14 +232,14 @@ class Rankgan(Gan):
         print('start pre-train discriminator:')
         self.reset_epoch()
         for epoch in range(self.pre_epoch_num * 3):
-            print('epoch:' + str(epoch))
+            #print('epoch:' + str(epoch))
             self.train_discriminator()
 
         self.reset_epoch()
         print('adversarial training:')
         self.reward = Reward(self.generator, .8)
         for epoch in range(self.adversarial_epoch_num):
-            # print('epoch:' + str(epoch))
+            # #print('epoch:' + str(epoch))
             start = time()
             for index in range(1):
                 samples = self.generator.generate(self.sess)
@@ -255,7 +251,7 @@ class Rankgan(Gan):
                 _ = self.sess.run(self.generator.g_updates, feed_dict=feed)
             end = time()
             self.add_epoch()
-            print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
+            #print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
             if epoch % 5 == 0 or epoch == self.adversarial_epoch_num - 1:
                 generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
                 get_cfg_test_file()
@@ -318,8 +314,6 @@ class Rankgan(Gan):
 
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.pre_epoch_num = 5
-        self.adversarial_epoch_num = 5
         self.log = open('experiment-log-rankgan-real.csv', 'w')
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
@@ -329,7 +323,7 @@ class Rankgan(Gan):
             start = time()
             loss = pre_train_epoch(self.sess, self.generator, self.gen_data_loader)
             end = time()
-            print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
+            #print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
             self.add_epoch()
             if epoch % 5 == 0:
                 generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
@@ -339,7 +333,7 @@ class Rankgan(Gan):
         print('start pre-train discriminator:')
         self.reset_epoch()
         for epoch in range(self.pre_epoch_num):
-            print('epoch:' + str(epoch))
+            #print('epoch:' + str(epoch))
             self.train_discriminator()
 
         self.reset_epoch()
@@ -347,7 +341,7 @@ class Rankgan(Gan):
         try:
          self.reward = Reward(self.generator, .8)
          for epoch in range(self.adversarial_epoch_num):
-            # print('epoch:' + str(epoch))
+            # #print('epoch:' + str(epoch))
             start = time()
             for index in range(1):
                 samples = self.generator.generate(self.sess)
@@ -359,7 +353,7 @@ class Rankgan(Gan):
                 _ = self.sess.run(self.generator.g_updates, feed_dict=feed)
             end = time()
             self.add_epoch()
-            print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
+            #print('epoch:' + str(self.epoch) + '\t time:' + str(end - start))
             if epoch % 5 == 0 or epoch == self.adversarial_epoch_num - 1:
                 generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
                 get_real_test_file()
