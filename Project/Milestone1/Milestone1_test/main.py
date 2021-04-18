@@ -60,7 +60,7 @@ def parse_cmd(argv):
     try:
         argvals = ' '.join(argv)
         if argvals == '':
-          print(beginMsg)
+            print(beginMsg)
             gan = None
             trainings = ["oracle", "cfg", "real"]
             #parse_cmd(sys.argv[1:])
