@@ -72,9 +72,9 @@ class Leakgan(Gan):
         self.dis_embedding_dim = 64
         self.goal_size = 16
 
-        self.oracle_file = 'save/oracle.txt'
-        self.generator_file = 'save/generator.txt'
-        self.test_file = 'save/test_file.txt'
+        self.oracle_file = 'models/leakGan/save/oracle.txt'
+        self.generator_file = 'models/leakGan/save/generator.txt'
+        self.test_file = 'models/leakGan/save/test_file.txt'
 
     def init_oracle_trainng(self, oracle=None):
         goal_out_size = sum(self.num_filters)

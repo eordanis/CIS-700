@@ -28,9 +28,9 @@ class Rankgan(Gan):
         self.generate_num = 128
         self.start_token = 0
 
-        self.oracle_file = 'save/oracle.txt'
-        self.generator_file = 'save/generator.txt'
-        self.test_file = 'save/test_file.txt'
+        self.oracle_file = 'models/rankGan/save/oracle.txt'
+        self.generator_file = 'models/rankGan/save/generator.txt'
+        self.test_file = 'models/rankGan/save/test_file.txt'
 
     def init_oracle_trainng(self, oracle=None):
         if oracle is None:
