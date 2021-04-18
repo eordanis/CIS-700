@@ -94,7 +94,7 @@ class Mle(Gan):
         self.init_oracle_trainng()
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.log = opent('../../results/experiment-log-mle.csv', 'w')
+        self.log = open('../../results/experiment-log-mle.csv', 'w')
         generate_samples(self.sess, self.oracle, self.batch_size, self.generate_num, self.oracle_file)
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
@@ -151,7 +151,7 @@ class Mle(Gan):
 
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.log = opent('../../results/experiment-log-mle-real.csv', 'w')
+        self.log = open('../../results/experiment-log-mle-real.csv', 'w')
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
 

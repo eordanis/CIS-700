@@ -102,7 +102,7 @@ class Maligan(Gan):
         self.init_metric()
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.log = opent('../../results/experiment-log-maligan-basic.csv', 'w')
+        self.log = open('../../results/experiment-log-maligan-basic.csv', 'w')
         generate_samples(self.sess, self.oracle, self.batch_size, self.generate_num, self.oracle_file)
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
@@ -200,7 +200,7 @@ class Maligan(Gan):
         self.init_cfg_metric(grammar=cfg_grammar)
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.log = opent('../../results/experiment-log-maliganbasic-cfg.csv', 'w')
+        self.log = open('../../results/experiment-log-maliganbasic-cfg.csv', 'w')
         # generate_samples(self.sess, self.oracle, self.batch_size, self.generate_num, self.oracle_file)
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
@@ -301,7 +301,7 @@ class Maligan(Gan):
 
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.log = opent('../../results/experiment-log-maligan-real.csv', 'w')
+        self.log = open('../../results/experiment-log-maligan-real.csv', 'w')
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
 
