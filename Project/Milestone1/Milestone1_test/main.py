@@ -112,7 +112,7 @@ def parse_cmd(argv):
                except Exception as e:
                   print("Main exception1")
                   print(e)
-                print(separatorStr)
+               print(separatorStr)
             print(completeMsg)
         else:
             print(beginMsg)
