@@ -1,5 +1,5 @@
-file = open("seinfeld.txt", "r")
-output = open("seinfeld_stripped.txt", "w")
+file = open("test_seinfeld.txt", "r")
+output = open("test_seinfeld_stripped.txt", "w")
 
 for x in file:
     a_string = x
