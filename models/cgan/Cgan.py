@@ -123,9 +123,7 @@ class Cgan(Gan):
         self.init_metric()
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.pre_epoch_num = 0
-        self.adversarial_epoch_num = 5
-        self.log = open('experiment-log-cgan.csv', 'w')
+        self.log = open('results/experiment-log-cgan.csv', 'w')
         generate_samples(self.sess, self.oracle, self.batch_size, self.generate_num, self.oracle_file)
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
@@ -150,7 +148,6 @@ class Cgan(Gan):
         self.reset_epoch()
         print('adversarial training:')
         for epoch in range(self.adversarial_epoch_num):
-            # ##print('epoch:' + str(epoch))
             start = time()
             for index in range(10):
                 self.generator.unsupervised_train(self.sess)
@@ -213,9 +210,7 @@ class Cgan(Gan):
         self.init_cfg_metric(grammar=cfg_grammar)
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.pre_epoch_num = 0
-        self.adversarial_epoch_num = 5
-        self.log = open('../../results/experiment-log-cgan-cfg.csv', 'w')
+        self.log = open('results/experiment-log-cgan-cfg.csv', 'w')
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
         self.oracle_data_loader.create_batches(self.generator_file)
@@ -304,9 +299,7 @@ class Cgan(Gan):
 
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.pre_epoch_num = 0
-        self.adversarial_epoch_num = 5
-        self.log = open('experiment-log-cgan-real.csv', 'w')
+        self.log = open('results/experiment-log-cgan-real.csv', 'w')
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
 
