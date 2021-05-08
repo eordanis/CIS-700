@@ -1,0 +1,10 @@
+Stephanie:
+			1. Reworked original code to save data to common directory,
+			using unique naming for ease of compartmentalized running and testing
+			2. Restructured report for use with M2
+			3. Added cGan model to code as per M2 requirement and discussed it
+			4. Added end component to use more visual comparisions using csv data generation from trainings
+Jackson:
+			1. Added _Gan model to code as per M2 requirement and discussed it
+Ravjot:
+			1. Added _Gan model to code as per M2 requirement and discussed it
