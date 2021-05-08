@@ -105,6 +105,7 @@ class Cgan(Gan):
             self.oracle_data_loader.create_batches(self.generator_file)
         if self.log is not None:
             if self.epoch == 0 or self.epoch == 1:
+                self.log.write('epochs, ')
                 for metric in self.metrics:
                     print(metric.get_name())
                     self.log.write(metric.get_name() + ',')
