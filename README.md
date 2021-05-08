@@ -40,8 +40,8 @@ Or just type `pip install -r requirements.txt` in your terminal.
 ## Newly Added Models
 
 * **CGan** - Conditional Generative Adversarial Model
-* **2_GAN** - 
-* **3_GAN** - 
+* **INFOGAN** - 
+* **LSGAN** - 
 
 ## Get Started
 
