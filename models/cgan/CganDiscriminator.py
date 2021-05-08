@@ -16,6 +16,10 @@ class Discriminator():
         self.batch_size_scale = batch_size
         self.hidden_unit = hidden_unit
         self.d_params = []
+
+        # Placeholders for input, output and dropout
+        self.input_x = tf.compat.v1.placeholder(tf.compat.v1.int32, [None, sequence_length], name="input_x")
+        self.input_y = tf.compat.v1.placeholder(tf.compat.v1.float32, [None, num_classes], name="input_y")
         l2_loss = tf.compat.v1.constant(0.0)
         self.start_token = tf.compat.v1.constant([start_token] * batch_size, dtype=tf.compat.v1.int32)
 
