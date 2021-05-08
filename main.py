@@ -24,9 +24,9 @@ def set_gan(gan_name):
     gans['leakgan'] = Leakgan
     gans['rankgan'] = Rankgan
     gans['maligan'] = Maligan
-    gans['1_Gan'] = 1_Gan
-    gans['2_Gan'] = 2_Gan
-    gans['3_Gan'] = 3_Gan
+    #gans['1_Gan'] = 1_Gan
+    #gans['2_Gan'] = 2_Gan
+    #gans['3_Gan'] = 3_Gan
     try:
         Gan = gans[gan_name.lower()]
         gan = Gan()
@@ -81,9 +81,9 @@ def parse_cmd(argv):
             opt_arg["-g"].append('leakgan')
             opt_arg["-g"].append('textgan')
             opt_arg["-g"].append('gsgan')
-            opt_arg["-g"].append('1_Gan')
-            opt_arg["-g"].append('2_Gan')
-            opt_arg["-g"].append('3_Gan')
+            #opt_arg["-g"].append('1_Gan')
+            #opt_arg["-g"].append('2_Gan')
+            #opt_arg["-g"].append('3_Gan')
             for training in trainings:
              print("try with training.." + training)
              for value in opt_arg.values():
