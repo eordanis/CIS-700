@@ -6,7 +6,7 @@ from colorama import Fore
 from models.gsgan.Gsgan import Gsgan
 from models.leakgan.Leakgan import Leakgan
 from models.maligan_basic.Maligan import Maligan
-from models.mle.Mle import Mle
+from models.cgan.Cgan import Cgan
 from models.rankgan.Rankgan import Rankgan
 from models.seqgan.Seqgan import Seqgan
 from models.textGan_MMD.Textgan import TextganMmd
@@ -24,7 +24,7 @@ def set_gan(gan_name):
     gans['leakgan'] = Leakgan
     gans['rankgan'] = Rankgan
     gans['maligan'] = Maligan
-    #gans['1_Gan'] = 1_Gan
+    gans['cgan'] = Cgan
     #gans['2_Gan'] = 2_Gan
     #gans['3_Gan'] = 3_Gan
     try:
@@ -81,7 +81,7 @@ def parse_cmd(argv):
             opt_arg["-g"].append('leakgan')
             opt_arg["-g"].append('textgan')
             opt_arg["-g"].append('gsgan')
-            #opt_arg["-g"].append('1_Gan')
+            opt_arg["-g"].append('cgan')
             #opt_arg["-g"].append('2_Gan')
             #opt_arg["-g"].append('3_Gan')
             for training in trainings:
