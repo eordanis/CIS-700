@@ -1,10 +1,7 @@
 import pandas as pd
 from IPython.display import display_html
+import matplotlib.pyplot as plt
 
-
-df_title_list = ['Oracle EmbeddingSimilarites', 'Oracle NLL-Oracle', 'Oracle NLL-Test',
-                          'Real EmbeddingSimilarites',
-                          'Real NLL-Test']
 
 def display_synth_data():
     # prep the synthetic text dataframes
@@ -34,7 +31,7 @@ def display_synth_data():
     display_html(container, raw=True)
 
 
-def get_metric_df_list():
+def display_metrics():
     # prep the metric dataframes
     oracle_sg = pd.read_csv('results/experiment-log-seqgan.csv').iloc[:, : 4]
     oracle_tg = pd.read_csv('results/experiment-log-textgan.csv').iloc[:, : 4]
@@ -92,11 +89,24 @@ def get_metric_df_list():
                                   # 'LSGAN': real_lg['nll-test'],
                                   })
 
+    # define number of rows and columns for subplots
+    nrow = 3
+    ncol = 2
     # make a list of all dataframes
     df_list = [oracle_embed, oracle_nll_orc, oracle_nll_test, real_embed, real_nll_test]
-    return df_list
-
-
-def get_metric_df_title_list():
-    return df_title_list
+    df_title_list = ['Oracle EmbeddingSimilarites', 'Oracle NLL-Oracle', 'Oracle NLL-Test',
+                     'Real EmbeddingSimilarites',
+                     'Real NLL-Test']
+    # plot counter
+    count = 0
+    fig, axes = plt.subplots(nrow, ncol)
+    plt.subplots_adjust(wspace=0.2, hspace=0.5)
+    for r in range(nrow):
+        for c in range(ncol):
+            if (count < 5):
+                df_list[count].plot(ax=axes[r, c], x='Epoch', y=['SeqGan', 'TextGan', 'CGan'], kind='line',
+                                    title=df_title_list[count], figsize=(20, 10))
+                count += 1
+    # save metrics to .png for later use in pdf report
+    plt.savefig('results/metric_charts.png')
 
