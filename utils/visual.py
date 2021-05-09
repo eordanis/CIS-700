@@ -2,6 +2,10 @@ import pandas as pd
 from IPython.display import display_html
 
 
+df_title_list = ['Oracle EmbeddingSimilarites', 'Oracle NLL-Oracle', 'Oracle NLL-Test',
+                          'Real EmbeddingSimilarites',
+                          'Real NLL-Test']
+
 def display_synth_data():
     # prep the synthetic text dataframes
     seqgan_data = pd.read_csv('results/seqgan_test_file.txt', sep="\n", header=None)
@@ -30,7 +34,7 @@ def display_synth_data():
     display_html(container, raw=True)
 
 
-def get_metric_df_lists():
+def get_metric_df_list():
     # prep the metric dataframes
     oracle_sg = pd.read_csv('results/experiment-log-seqgan.csv').iloc[:, : 4]
     oracle_tg = pd.read_csv('results/experiment-log-textgan.csv').iloc[:, : 4]
@@ -90,7 +94,9 @@ def get_metric_df_lists():
 
     # make a list of all dataframes
     df_list = [oracle_embed, oracle_nll_orc, oracle_nll_test, real_embed, real_nll_test]
-    df_title_list = ['Oracle EmbeddingSimilarites', 'Oracle NLL-Oracle', 'Oracle NLL-Test', 'Real EmbeddingSimilarites',
-                     'Real NLL-Test']
-    return {df_list, df_title_list}
+    return df_list
+
+
+def get_metric_df_title_list():
+    return df_title_list
 
