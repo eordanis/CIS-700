@@ -17,9 +17,8 @@ class Discriminator():
         self.hidden_unit = hidden_unit
         self.d_params = []
 
-        # Placeholders for input, output and dropout
+        # Placeholders for input
         self.input_x = tf.compat.v1.placeholder(tf.compat.v1.int32, [None, sequence_length], name="input_x")
-        self.input_y = tf.compat.v1.placeholder(tf.compat.v1.float32, [None, num_classes], name="input_y")
         l2_loss = tf.compat.v1.constant(0.0)
         self.start_token = tf.compat.v1.constant([start_token] * batch_size, dtype=tf.compat.v1.int32)
 
@@ -34,6 +33,7 @@ class Discriminator():
                     name="W")
                 self.embedded_chars = tf.compat.v1.nn.embedding_lookup(self.W, self.input_x)
                 self.embedded_chars_expanded = tf.compat.v1.expand_dims(self.embedded_chars, -1)
+
             self.g_recurrent_unit = self.create_recurrent_unit(self.d_params)  # maps h_tm1 to h_t for generator
             self.g_output_unit = self.create_output_unit(self.d_params)  # maps h_t to o_t (output token logits)
         self.input_x = tf.compat.v1.placeholder(tf.compat.v1.float32, [batch_size, sequence_length, vocab_size], name='input_x')

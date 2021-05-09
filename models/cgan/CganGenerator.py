@@ -24,11 +24,22 @@ class Generator(object):
 
         self.expected_reward = tf.compat.v1.Variable(tf.compat.v1.zeros([self.sequence_length]))
 
+        # Placeholder for input
+        self.input_x = tf.compat.v1.placeholder(tf.compat.v1.int32, [None, sequence_length], name="input_x")
+
         with tf.compat.v1.variable_scope('generator'):
             '''
                For Milestone 2, adding a new layer, embedding layer, to be used as the 
                conditional layer common between D/G
             '''
+            # Embedding layer
+            with tf.compat.v1.device('/cpu:0'), tf.compat.v1.name_scope("embedding"):
+                self.W = tf.compat.v1.Variable(
+                    tf.compat.v1.random_uniform([num_vocabulary, self.emb_dim], -1.0, 1.0),
+                    name="W")
+                self.embedded_chars = tf.compat.v1.nn.embedding_lookup(self.W, self.input_x)
+                self.embedded_chars_expanded = tf.compat.v1.expand_dims(self.embedded_chars, -1)
+                
             self.g_embeddings = tf.compat.v1.Variable(self.init_matrix([self.num_vocabulary, self.emb_dim]))
             self.g_params.append(self.g_embeddings)
             self.g_recurrent_unit = self.create_recurrent_unit(self.g_params)  # maps h_tm1 to h_t for generator
