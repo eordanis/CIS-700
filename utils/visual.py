@@ -27,8 +27,6 @@ def display_synth_data():
     file = open("results/synth_data.html", "w")
     file.write(container)
     file.close()
-
-    print('test')
     display_html(container, raw=True)
 
 
@@ -94,5 +92,5 @@ def get_metric_df_lists():
     df_list = [oracle_embed, oracle_nll_orc, oracle_nll_test, real_embed, real_nll_test]
     df_title_list = ['Oracle EmbeddingSimilarites', 'Oracle NLL-Oracle', 'Oracle NLL-Test', 'Real EmbeddingSimilarites',
                      'Real NLL-Test']
-    return {'df_list': df_list, 'df_title_list': df_title_list}
+    return {df_list, df_title_list}
 
