@@ -23,6 +23,7 @@ class Generator(object):
         self.expected_reward = tf.compat.v1.Variable(tf.compat.v1.zeros([self.sequence_length]))
 
         with tf.compat.v1.variable_scope('generator'):
+          #add layers
             self.g_embeddings = tf.compat.v1.Variable(self.init_matrix([self.num_vocabulary, self.emb_dim]))
             self.g_params.append(self.g_embeddings)
             self.g_recurrent_unit = self.create_recurrent_unit(self.g_params)  # maps h_tm1 to h_t for generator

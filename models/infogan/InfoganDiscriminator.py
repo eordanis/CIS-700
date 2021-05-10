@@ -152,6 +152,18 @@ class Discriminator(object):
             with tf.compat.v1.name_scope("dropout"):
                 self.h_drop = tf.compat.v1.nn.dropout(self.h_highway, self.dropout_keep_prob)
 
+            #Batch Normalization - line 103
+            tf.compat.v1.layers.BatchNormalization(
+              axis=-1, momentum=0.99, epsilon=0.001, center=True, scale=True,
+              beta_initializer=tf.zeros_initializer(),
+              gamma_initializer=tf.ones_initializer(),
+              moving_mean_initializer=tf.zeros_initializer(),
+              moving_variance_initializer=tf.ones_initializer(), beta_regularizer=None,
+              gamma_regularizer=None, beta_constraint=None, gamma_constraint=None,
+              renorm=False, renorm_clipping=None, renorm_momentum=0.99, fused=None,
+              trainable=True, virtual_batch_size=None, adjustment=None, name=None, **kwargs
+            )
+
             # Final (unnormalized) scores and predictions
             with tf.compat.v1.name_scope("output"):
                 W = tf.compat.v1.Variable(tf.compat.v1.truncated_normal([num_filters_total, num_classes], stddev=0.1), name="W")

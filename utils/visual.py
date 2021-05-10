@@ -11,8 +11,8 @@ def display_synth_data():
     textgan_data.columns = ["TextGAN Synth Data"]
     cgan_data = pd.read_csv('results/test_file_cgan.txt', sep="\n", header=None)
     cgan_data.columns = ["CGAN Synth Data"]
-    # infogan_data = pd.read_csv('results/test_file_infogan.txt', sep="\n", header=None)
-    # infogan_data.columns = ["INFOGAN Synth Data"]
+    infogan_data = pd.read_csv('results/test_file_infogan.txt', sep="\n", header=None)
+    infogan_data.columns = ["InfoGan Synth Data"]
     # lsgan_data = pd.read_csv('results/test_file_lsgan.txt', sep="\n", header=None)
     # lsgan_data.columns = ["LSGAN Synth Data"]
 
@@ -20,7 +20,7 @@ def display_synth_data():
     df1_styler = seqgan_data.head(5).style.set_table_attributes("style='display:inline'")
     df2_styler = textgan_data.head(5).style.set_table_attributes("style='display:inline'")
     df3_styler = cgan_data.head(5).style.set_table_attributes("style='display:inline'")
-    # df4_styler = infogan_data.head(5).style.set_table_attributes("style='display:inline'")
+    df4_styler = infogan_data.head(5).style.set_table_attributes("style='display:inline'")
     # df5_styler = lsgan_data.head(5).style.set_table_attributes("style='display:inline'")
 
     hrule = '<hr style="width: 900px; margin-left:0;">'
@@ -36,12 +36,12 @@ def display_metrics():
     oracle_sg = pd.read_csv('results/experiment-log-seqgan.csv').iloc[:, : 4]
     oracle_tg = pd.read_csv('results/experiment-log-textgan.csv').iloc[:, : 4]
     oracle_cg = pd.read_csv('results/experiment-log-cgan.csv').iloc[:, : 4]
-    # oracle_ig = pd.read_csv ('results/experiment-log-infogan.csv').iloc[:, : 4]
-    # oracle_lg = pd.read_csv ('results/experiment-log-lsgan.csv').iloc[:, : 4]
+     oracle_ig = pd.read_csv ('results/experiment-log-infogan.csv').iloc[:, : 4]
+     oracle_lg = pd.read_csv ('results/experiment-log-lsgan.csv').iloc[:, : 4]
     real_sg = pd.read_csv('results/experiment-log-seqgan-real.csv').iloc[:, : 3]
     real_tg = pd.read_csv('results/experiment-log-textgan-real.csv').iloc[:, : 3]
     real_cg = pd.read_csv('results/experiment-log-cgan-real.csv').iloc[:, : 3]
-    # real_ig = pd.read_csv ('results/experiment-log-infogan-real.csv').iloc[:, : 3]
+     real_ig = pd.read_csv ('results/experiment-log-infogan-real.csv').iloc[:, : 3]
     # real_lg = pd.read_csv ('results/experiment-log-lsgan-real.csv').iloc[:, : 3]
 
     # Create new dataframe to represent Oracle EmbeddingSimilarity across all models
@@ -49,7 +49,7 @@ def display_metrics():
                                  'SeqGan': oracle_sg['EmbeddingSimilarity'],
                                  'TextGan': oracle_tg['EmbeddingSimilarity'],
                                  'CGan': oracle_cg['EmbeddingSimilarity'],
-                                 # 'INFOGAN': oracle_ig['EmbeddingSimilarity'],
+                                  'InfoGan': oracle_ig['EmbeddingSimilarity'],
                                  # 'LSGAN': oracle_lg['EmbeddingSimilarity'],
                                  })
 
@@ -58,7 +58,7 @@ def display_metrics():
                                    'SeqGan': oracle_sg['nll-oracle'],
                                    'TextGan': oracle_tg['nll-oracle'],
                                    'CGan': oracle_cg[' nll-oracle'],
-                                   # 'INFOGAN': oracle_ig['nll-oracle'],
+                                    'InfoGan': oracle_ig['nll-oracle'],
                                    # 'LSGAN': oracle_lg['nll-oracle'],
                                    })
 
@@ -67,7 +67,7 @@ def display_metrics():
                                     'SeqGan': oracle_sg['nll-test'],
                                     'TextGan': oracle_tg['nll-test'],
                                     'CGan': oracle_cg['nll-test'],
-                                    # 'INFOGAN': oracle_ig['nll-test'],
+                                     'InfoGan': oracle_ig['nll-test'],
                                     # 'LSGAN': oracle_lg['nll-test'],
                                     })
 
@@ -76,7 +76,7 @@ def display_metrics():
                                'SeqGan': real_sg[' EmbeddingSimilarity'],
                                'TextGan': real_tg['EmbeddingSimilarity'],
                                'CGan': real_cg[' EmbeddingSimilarity'],
-                               # 'INFOGAN': v_ig['EmbeddingSimilarity'],
+                                'InfoGan': v_ig['EmbeddingSimilarity'],
                                # 'LSGAN': real_lg['EmbeddingSimilarity'],
                                })
 
@@ -85,7 +85,7 @@ def display_metrics():
                                   'SeqGan': real_sg['nll-test'],
                                   'TextGan': real_tg['nll-test'],
                                   'CGan': real_cg['nll-test'],
-                                  # 'INFOGAN': real_ig['nll-test'],
+                                   'InfoGan': real_ig['nll-test'],
                                   # 'LSGAN': real_lg['nll-test'],
                                   })
 
@@ -104,7 +104,7 @@ def display_metrics():
     for r in range(nrow):
         for c in range(ncol):
             if (count < 5):
-                df_list[count].plot(ax=axes[r, c], x='Epoch', y=['SeqGan', 'TextGan', 'CGan'], kind='line',
+                df_list[count].plot(ax=axes[r, c], x='Epoch', y=['SeqGan', 'TextGan', 'CGan', 'InfoGan'], kind='line',
                                     title=df_title_list[count], figsize=(20, 10))
                 count += 1
     # save metrics to .png for later use in pdf report
