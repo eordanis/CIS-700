@@ -2,10 +2,10 @@ import json
 from time import time
 
 from models.Gan import Gan
-from models.seqgan.SeqganDataLoader import DataLoader, DisDataloader
-from models.seqgan.SeqganDiscriminator import Discriminator
-from models.seqgan.SeqganGenerator import Generator
-from models.seqgan.SeqganReward import Reward
+from models.infogan.InfoganDataLoader import DataLoader, DisDataloader
+from models.infogan.InfoganDiscriminator import Discriminator
+from models.infogan.InfoganGenerator import Generator
+from models.infogan.InfoganReward import Reward
 from utils.metrics.Cfg import Cfg
 from utils.metrics.EmbSim import EmbSim
 from utils.metrics.Nll import Nll
@@ -31,9 +31,9 @@ class Infogan(Gan):
         self.generate_num = 128
         self.start_token = 0
 
-        self.oracle_file = 'results/oracle_seqgan.txt'
-        self.generator_file = 'results/generator_seqgan.txt'
-        self.test_file = 'results/test_file_seqgan.txt'
+        self.oracle_file = 'results/oracle_infogan.txt'
+        self.generator_file = 'results/generator_infogan.txt'
+        self.test_file = 'results/test_file_infogan.txt'
 
     def init_metric(self):
         nll = Nll(data_loader=self.oracle_data_loader, rnn=self.oracle, sess=self.sess)
@@ -107,7 +107,7 @@ class Infogan(Gan):
         self.init_metric()
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.log = open('results/experiment-log-seqgan.csv', 'w')
+        self.log = open('results/experiment-log-infogan.csv', 'w')
         generate_samples(self.sess, self.oracle, self.batch_size, self.generate_num, self.oracle_file)
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
@@ -200,7 +200,7 @@ class Infogan(Gan):
         self.init_cfg_metric(grammar=cfg_grammar)
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.log = open('results/experiment-log-seqgan-cfg.csv', 'w')
+        self.log = open('results/experiment-log-infogan-cfg.csv', 'w')
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
         self.oracle_data_loader.create_batches(self.generator_file)
@@ -224,6 +224,7 @@ class Infogan(Gan):
         print('adversarial training:')
         self.reward = Reward(self.generator, .8)
         for epoch in range(self.adversarial_epoch_num):
+            # #print('epoch:' + str(epoch))
             start = time()
             for index in range(1):
                 samples = self.generator.generate(self.sess)
@@ -298,7 +299,7 @@ class Infogan(Gan):
 
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.log = open('results/experiment-log-seqgan-real.csv', 'w')
+        self.log = open('results/experiment-log-infogan-real.csv', 'w')
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
 

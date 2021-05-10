@@ -5,7 +5,7 @@ import numpy as np
 
 class Generator(object):
     def __init__(self, num_vocabulary, batch_size, emb_dim, hidden_dim,
-                 sequence_length, start_token,
+                 sequence_length, start_token, filter_size, num_filters,
                  learning_rate=0.01, reward_gamma=0.95):
         self.num_vocabulary = num_vocabulary
         self.batch_size = batch_size
@@ -47,6 +47,103 @@ class Generator(object):
                                              dynamic_size=False, infer_shape=True)
         gen_x = tensor_array_ops.TensorArray(dtype=tf.compat.v1.int32, size=self.sequence_length,
                                              dynamic_size=False, infer_shape=True)
+
+        #Dense - line 68
+        '''tf.compat.v1.layers.dense(
+            32, (128 * 7 * 7), activation = None, use_bias=True, kernel_initializer=None,
+            bias_initializer=tf.zeros_initializer(), kernel_regularizer=None,
+            bias_regularizer=None, activity_regularizer=None, kernel_constraint=None,
+            bias_constraint=None, trainable=True, name=None, reuse=None
+        )'''
+
+        #Reshape - line 69
+        '''tf.reshape(
+            tensor, shape, name=None
+        )'''
+
+        #BatchNormalization - line 70
+        tf.compat.v1.layers.BatchNormalization(
+            axis=-1, momentum=0.8, epsilon=0.001, center=True, scale=True,
+            beta_initializer=tf.zeros_initializer(),
+            gamma_initializer=tf.ones_initializer(),
+            moving_mean_initializer=tf.zeros_initializer(),
+            moving_variance_initializer=tf.ones_initializer(), beta_regularizer=None,
+            gamma_regularizer=None, beta_constraint=None, gamma_constraint=None,
+            renorm=False, renorm_clipping=None, renorm_momentum=0.99, fused=None,
+            trainable=True, virtual_batch_size=None, adjustment=None, name=None
+        )
+
+        #UpSampling2d - line 71
+        #x = tf.image.resize_nearest_neighbor(x, (2*H,2*W))
+
+        # Convolution Layer - line 72
+        filter_shape = [filter_size, emb_dim, 1, num_filters]
+        ##W = tf.compat.v1.Variable(tf.compat.v1.truncated_normal(filter_shape, stddev=0.1), name="W")
+        W = tf.compat.v1.Variable(
+                    tf.compat.v1.random_uniform([num_vocabulary, emb_dim], -1.0, 1.0),
+                    name="W")
+        ##b = tf.compat.v1.Variable(tf.compat.v1.constant(0.1, shape=[num_filters]), name="b")
+        conv = tf.compat.v1.nn.conv2d(
+            None,
+            W,
+            strides=[1, 1, 1, 1],
+            padding="VALID",
+            name="conv")
+        # Apply nonlinearity
+        ##h = tf.compat.v1.nn.relu(tf.compat.v1.nn.bias_add(conv, b), name="relu")
+
+        #BatchNormalization - line 74
+        tf.compat.v1.layers.BatchNormalization(
+            axis=-1, momentum=0.08, epsilon=0.001, center=True, scale=True,
+            beta_initializer=tf.zeros_initializer(),
+            gamma_initializer=tf.ones_initializer(),
+            moving_mean_initializer=tf.zeros_initializer(),
+            moving_variance_initializer=tf.ones_initializer(), beta_regularizer=None,
+            gamma_regularizer=None, beta_constraint=None, gamma_constraint=None,
+            renorm=False, renorm_clipping=None, renorm_momentum=0.99, fused=None,
+            trainable=True, virtual_batch_size=None, adjustment=None, name=None, **kwargs
+        )
+
+        #UpSampling2d - line 75
+        #x = tf.image.resize_nearest_neighbor(x, (2*H,2*W))
+
+        # Convolution Layer - line 76
+        filter_shape = [filter_size, emb_dim, 1, num_filter]
+        W = tf.compat.v1.Variable(tf.compat.v1.truncated_normal(filter_shape, stddev=0.1), name="W")
+        b = tf.compat.v1.Variable(tf.compat.v1.constant(0.1, shape=[num_filter]), name="b")
+        conv = tf.compat.v1.nn.conv2d(
+            self.embedded_chars_expanded,
+            W,
+            strides=[1, 1, 1, 1],
+            padding="VALID",
+            name="conv")
+        # Apply nonlinearity
+        h = tf.compat.v1.nn.relu(tf.compat.v1.nn.bias_add(conv, b), name="relu")
+
+        #BatchNormalization - line 78
+        tf.compat.v1.layers.BatchNormalization(
+            axis=-1, momentum=0.08, epsilon=0.001, center=True, scale=True,
+            beta_initializer=tf.zeros_initializer(),
+            gamma_initializer=tf.ones_initializer(),
+            moving_mean_initializer=tf.zeros_initializer(),
+            moving_variance_initializer=tf.ones_initializer(), beta_regularizer=None,
+            gamma_regularizer=None, beta_constraint=None, gamma_constraint=None,
+            renorm=False, renorm_clipping=None, renorm_momentum=0.99, fused=None,
+            trainable=True, virtual_batch_size=None, adjustment=None, name=None, **kwargs
+        )
+
+        # Convolution Layer - line 79
+        filter_shape = [filter_size, emd_dim, 1, num_filter]
+        W = tf.compat.v1.Variable(tf.compat.v1.truncated_normal(filter_shape, stddev=0.1), name="W")
+        b = tf.compat.v1.Variable(tf.compat.v1.constant(0.1, shape=[num_filter]), name="b")
+        conv = tf.compat.v1.nn.conv2d(
+            self.embedded_chars_expanded,
+            W,
+            strides=[1, 1, 1, 1],
+            padding="VALID",
+            name="conv")
+        # Apply nonlinearity
+        h = tf.compat.v1.nn.tanh(tf.compat.v1.nn.bias_add(conv, b), name="tanh")
 
         def _g_recurrence(i, x_t, h_tm1, gen_o, gen_x):
             h_t = self.g_recurrent_unit(x_t, h_tm1)  # hidden_memory_tuple

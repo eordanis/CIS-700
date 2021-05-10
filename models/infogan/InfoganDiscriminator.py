@@ -1,5 +1,5 @@
 import tensorflow as tf
-from functools import partial
+
 
 def linear(input_, output_size, scope=None):
     '''
@@ -67,146 +67,108 @@ class Discriminator(object):
         # Keeping track of l2 regularization loss (optional)
         l2_loss = tf.compat.v1.constant(0.0)
 
-        # Convolution Layer - line 96
-        filter_shape = [filter_size, emd_dim, 1, num_filter]
-        W = tf.compat.v1.Variable(tf.compat.v1.truncated_normal(filter_shape, stddev=0.1), name="W")
-        b = tf.compat.v1.Variable(tf.compat.v1.constant(0.1, shape=[num_filter]), name="b")
-        conv = tf.compat.v1.nn.conv2d(
-            self.embedded_chars_expanded,
-            W,
-            strides=[1, 1, 1, 1],
-            padding="VALID",
-            name="conv")
+        with tf.compat.v1.variable_scope('discriminator'):
+            # Embedding layer
+            with tf.compat.v1.device('/cpu:0'), tf.compat.v1.name_scope("embedding"):
+                self.W = tf.compat.v1.Variable(
+                    tf.compat.v1.random_uniform([vocab_size, emd_dim], -1.0, 1.0),
+                    name="W")
+                self.embedded_chars = tf.compat.v1.nn.embedding_lookup(self.W, self.input_x)
+                self.embedded_chars_expanded = tf.compat.v1.expand_dims(self.embedded_chars, -1)
 
-        # Apply nonlinearity
-        h = tf.compat.v1.nn.relu(tf.compat.v1.nn.bias_add(conv, b), name="relu")
+            # Create a convolution + maxpool layer for each filter size
+            pooled_outputs = []
+            for filter_size, num_filter in zip(filter_sizes, num_filters):
+                with tf.compat.v1.name_scope("conv-maxpool-%s" % filter_size):
+                    # Convolution Layer
+                    filter_shape = [filter_size, emd_dim, 1, num_filter]
+                    W = tf.compat.v1.Variable(tf.compat.v1.truncated_normal(filter_shape, stddev=0.1), name="W")
+                    b = tf.compat.v1.Variable(tf.compat.v1.constant(0.1, shape=[num_filter]), name="b")
+                    conv = tf.compat.v1.nn.conv2d(
+                        self.embedded_chars_expanded,
+                        W,
+                        strides=[1, 1, 1, 1],
+                        padding="VALID",
+                        name="conv")
+                    # Apply nonlinearity
+                    h = tf.compat.v1.nn.relu(tf.compat.v1.nn.bias_add(conv, b), name="relu")
+                    # Maxpooling over the outputs
+                    pooled = tf.compat.v1.nn.max_pool(
+                        h,
+                        ksize=[1, sequence_length - filter_size + 1, 1, 1],
+                        strides=[1, 1, 1, 1],
+                        padding='VALID',
+                        name="pool")
+                    pooled_outputs.append(pooled)
 
-        #LeakyReLu - line 97
-        output = tf.compat.v1.layers.dense(input, n_units, activation=partial(tf.nn.leaky_relu, alpha=0.01))
+            # Combine all the pooled features
+            num_filters_total = sum(num_filters)
+            self.h_pool = tf.compat.v1.concat(pooled_outputs, 3)
+            self.h_pool_flat = tf.compat.v1.reshape(self.h_pool, [-1, num_filters_total])
 
-        # Add dropout - line 98
-        with tf.compat.v1.name_scope("dropout"):
-            self.h_drop = tf.compat.v1.nn.dropout(self.h_highway, self.dropout_keep_prob)
+            # Add highway
+            with tf.compat.v1.name_scope("highway"):
+                self.h_highway = highway(self.h_pool_flat, self.h_pool_flat.get_shape()[1], 1, 0)
 
+            # Add dropout
+            with tf.compat.v1.name_scope("dropout"):
+                self.h_drop = tf.compat.v1.nn.dropout(self.h_highway, self.dropout_keep_prob)
 
-        # Convolution Layer - line 99
-        filter_shape = [filter_size, emd_dim, 1, num_filter]
-        W = tf.compat.v1.Variable(tf.compat.v1.truncated_normal(filter_shape, stddev=0.1), name="W")
-        b = tf.compat.v1.Variable(tf.compat.v1.constant(0.1, shape=[num_filter]), name="b")
-        conv = tf.compat.v1.nn.conv2d(
-            self.embedded_chars_expanded,
-            W,
-            strides=[1, 1, 1, 1],
-            padding="VALID",
-            name="conv")
-        # Apply nonlinearity
-        h = tf.compat.v1.nn.relu(tf.compat.v1.nn.bias_add(conv, b), name="relu")
+                        # Create a convolution + maxpool layer for each filter size
+            ##pooled_outputs = []
+            for filter_size, num_filter in zip(filter_sizes, num_filters):
+                with tf.compat.v1.name_scope("conv-maxpool-%s" % filter_size):
+                    # Convolution Layer
+                    filter_shape = [filter_size, emd_dim, 1, num_filter]
+                    W = tf.compat.v1.Variable(tf.compat.v1.truncated_normal(filter_shape, stddev=0.1), name="W")
+                    b = tf.compat.v1.Variable(tf.compat.v1.constant(0.1, shape=[num_filter]), name="b")
+                    conv = tf.compat.v1.nn.conv2d(
+                        self.embedded_chars_expanded,
+                        W,
+                        strides=[1, 1, 1, 1],
+                        padding="VALID",
+                        name="conv")
+                    # Apply nonlinearity
+                    h = tf.compat.v1.nn.relu(tf.compat.v1.nn.bias_add(conv, b), name="relu")
+                    # Maxpooling over the outputs
+                    pooled = tf.compat.v1.nn.max_pool(
+                        h,
+                        ksize=[1, sequence_length - filter_size + 1, 1, 1],
+                        strides=[1, 1, 1, 1],
+                        padding='VALID',
+                        name="pool")
+                    pooled_outputs.append(pooled)
 
+            # Combine all the pooled features
+            num_filters_total = sum(num_filters)
+            self.h_pool = tf.compat.v1.concat(pooled_outputs, 3)
+            self.h_pool_flat = tf.compat.v1.reshape(self.h_pool, [-1, num_filters_total])
 
-        # line 100
-        tf.compat.v1.pad(
-            tensor, paddings, mode='CONSTANT', name=None, constant_values=0
-        )
+            # Add highway
+            with tf.compat.v1.name_scope("highway"):
+                self.h_highway = highway(self.h_pool_flat, self.h_pool_flat.get_shape()[1], 1, 0)
 
+            # Add dropout
+            with tf.compat.v1.name_scope("dropout"):
+                self.h_drop = tf.compat.v1.nn.dropout(self.h_highway, self.dropout_keep_prob)
 
-        #LeakyReLu - line 101
-        output = tf.compat.v1.layers.dense(input, n_units, activation=partial(tf.nn.leaky_relu, alpha=0.01))
+            # Final (unnormalized) scores and predictions
+            with tf.compat.v1.name_scope("output"):
+                W = tf.compat.v1.Variable(tf.compat.v1.truncated_normal([num_filters_total, num_classes], stddev=0.1), name="W")
+                b = tf.compat.v1.Variable(tf.compat.v1.constant(0.1, shape=[num_classes]), name="b")
+                l2_loss += tf.compat.v1.nn.l2_loss(W)
+                l2_loss += tf.compat.v1.nn.l2_loss(b)
+                self.scores = tf.compat.v1.nn.xw_plus_b(self.h_drop, W, b, name="scores")
+                self.ypred_for_auc = tf.compat.v1.nn.softmax(self.scores)
+                self.predictions = tf.compat.v1.argmax(self.scores, 1, name="predictions")
 
-        # Add dropout - line 102
-        with tf.compat.v1.name_scope("dropout"):
-            self.h_drop = tf.compat.v1.nn.dropout(self.h_highway, self.dropout_keep_prob)
+            # CalculateMean cross-entropy loss
+            with tf.compat.v1.name_scope("loss"):
+                losses = tf.compat.v1.nn.softmax_cross_entropy_with_logits(logits=self.scores, labels=self.input_y)
+                self.loss = tf.compat.v1.reduce_mean(losses) + l2_reg_lambda * l2_loss
+                self.d_loss = tf.compat.v1.reshape(tf.compat.v1.reduce_mean(self.loss), shape=[1])
 
-        #Batch Normalization - line 103
-        tf.compat.v1.layers.BatchNormalization(
-            axis=-1, momentum=0.99, epsilon=0.001, center=True, scale=True,
-            beta_initializer=tf.zeros_initializer(),
-            gamma_initializer=tf.ones_initializer(),
-            moving_mean_initializer=tf.zeros_initializer(),
-            moving_variance_initializer=tf.ones_initializer(), beta_regularizer=None,
-            gamma_regularizer=None, beta_constraint=None, gamma_constraint=None,
-            renorm=False, renorm_clipping=None, renorm_momentum=0.99, fused=None,
-            trainable=True, virtual_batch_size=None, adjustment=None, name=None, **kwargs
-        )
-
-        # Convolution Layer - line 104
-        filter_shape = [filter_size, emd_dim, 1, num_filter]
-        W = tf.compat.v1.Variable(tf.compat.v1.truncated_normal(filter_shape, stddev=0.1), name="W")
-        b = tf.compat.v1.Variable(tf.compat.v1.constant(0.1, shape=[num_filter]), name="b")
-        conv = tf.compat.v1.nn.conv2d(
-            self.embedded_chars_expanded,
-            W,
-            strides=[1, 1, 1, 1],
-            padding="VALID",
-            name="conv")
-        # Apply nonlinearity
-        h = tf.compat.v1.nn.relu(tf.compat.v1.nn.bias_add(conv, b), name="relu")
-
-         #LeakyReLu - line 105
-        output = tf.compat.v1.layers.dense(input, n_units, activation=partial(tf.nn.leaky_relu, alpha=0.01))
-
-        # Add dropout - line 106
-        with tf.compat.v1.name_scope("dropout"):
-            self.h_drop = tf.compat.v1.nn.dropout(self.h_highway, self.dropout_keep_prob)
-
-
-        #Batch Normalization - line 107
-        tf.compat.v1.layers.BatchNormalization(
-            axis=-1, momentum=0.99, epsilon=0.001, center=True, scale=True,
-            beta_initializer=tf.zeros_initializer(),
-            gamma_initializer=tf.ones_initializer(),
-            moving_mean_initializer=tf.zeros_initializer(),
-            moving_variance_initializer=tf.ones_initializer(), beta_regularizer=None,
-            gamma_regularizer=None, beta_constraint=None, gamma_constraint=None,
-            renorm=False, renorm_clipping=None, renorm_momentum=0.99, fused=None,
-            trainable=True, virtual_batch_size=None, adjustment=None, name=None, **kwargs
-        )
-
-        # Convolution Layer - line 108
-        filter_shape = [filter_size, emd_dim, 1, num_filter]
-        W = tf.compat.v1.Variable(tf.compat.v1.truncated_normal(filter_shape, stddev=0.1), name="W")
-        b = tf.compat.v1.Variable(tf.compat.v1.constant(0.1, shape=[num_filter]), name="b")
-        conv = tf.compat.v1.nn.conv2d(
-            self.embedded_chars_expanded,
-            W,
-            strides=[1, 1, 1, 1],
-            padding="VALID",
-            name="conv")
-        # Apply nonlinearity
-        h = tf.compat.v1.nn.relu(tf.compat.v1.nn.bias_add(conv, b), name="relu")
-
-        #LeakyReLu - line 109
-        output = tf.compat.v1.layers.dense(input, n_units, activation=partial(tf.nn.leaky_relu, alpha=0.01))
-        
-
-        # Add dropout - line 110
-        with tf.compat.v1.name_scope("dropout"):
-            self.h_drop = tf.compat.v1.nn.dropout(self.h_highway, self.dropout_keep_prob)
-
-
-        #Batch Normalization - line 111
-        tf.compat.v1.layers.BatchNormalization(
-            axis=-1, momentum=0.99, epsilon=0.001, center=True, scale=True,
-            beta_initializer=tf.zeros_initializer(),
-            gamma_initializer=tf.ones_initializer(),
-            moving_mean_initializer=tf.zeros_initializer(),
-            moving_variance_initializer=tf.ones_initializer(), beta_regularizer=None,
-            gamma_regularizer=None, beta_constraint=None, gamma_constraint=None,
-            renorm=False, renorm_clipping=None, renorm_momentum=0.99, fused=None,
-            trainable=True, virtual_batch_size=None, adjustment=None, name=None, **kwargs
-        )
-
-        #flatten - line 112
-        tf.nest.flatten(
-            structure, expand_composites=False
-        )
-
-        # CalculateMean cross-entropy loss
-        with tf.compat.v1.name_scope("loss"):
-            losses = tf.compat.v1.nn.softmax_cross_entropy_with_logits(logits=self.scores, labels=self.input_y)
-            self.loss = tf.compat.v1.reduce_mean(losses) + l2_reg_lambda * l2_loss
-            self.d_loss = tf.compat.v1.reshape(tf.compat.v1.reduce_mean(self.loss), shape=[1])
-
-    self.params = [param for param in tf.compat.v1.trainable_variables() if 'discriminator' in param.name]
-    d_optimizer = tf.compat.v1.train.AdamOptimizer(1e-4)
-    grads_and_vars = d_optimizer.compute_gradients(self.loss, self.params, aggregation_method=2)
-    self.train_op = d_optimizer.apply_gradients(grads_and_vars)
+        self.params = [param for param in tf.compat.v1.trainable_variables() if 'discriminator' in param.name]
+        d_optimizer = tf.compat.v1.train.AdamOptimizer(1e-4)
+        grads_and_vars = d_optimizer.compute_gradients(self.loss, self.params, aggregation_method=2)
+        self.train_op = d_optimizer.apply_gradients(grads_and_vars)
