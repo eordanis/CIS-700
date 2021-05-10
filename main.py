@@ -11,7 +11,7 @@ from models.dcgan.Dcgan import Dcgan
 from models.rankgan.Rankgan import Rankgan
 from models.seqgan.Seqgan import Seqgan
 from models.textGan_MMD.Textgan import TextganMmd
-
+from models.infogan.Infogan import Infogan
 
 separatorStr = "\n***************************************************************\n"
 beginMsg = "******** Beginning Training ********"
@@ -26,8 +26,8 @@ def set_gan(gan_name):
     gans['rankgan'] = Rankgan
     gans['maligan'] = Maligan
     gans['cgan'] = Cgan
-    #gans['2_Gan'] = 2_Gan
     gans['dcgan'] = Dcgan
+    gans['infogan'] = Infogan
     try:
         Gan = gans[gan_name.lower()]
         gan = Gan()
@@ -83,8 +83,8 @@ def parse_cmd(argv):
             opt_arg["-g"].append('textgan')
             opt_arg["-g"].append('gsgan')
             opt_arg["-g"].append('cgan')
-            #opt_arg["-g"].append('2_Gan')
             opt_arg["-g"].append('dcgan')
+            opt_arg["-g"].append('Infogan')
             for training in trainings:
              print("try with training.." + training)
              for value in opt_arg.values():
