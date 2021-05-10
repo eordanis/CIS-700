@@ -76,7 +76,7 @@ def display_metrics():
                                'SeqGan': real_sg[' EmbeddingSimilarity'],
                                'TextGan': real_tg['EmbeddingSimilarity'],
                                'CGan': real_cg[' EmbeddingSimilarity'],
-                               'InfoGan': real_ig['EmbeddingSimilarity'],
+                               'InfoGan': real_ig[' EmbeddingSimilarity'],
                                # 'LSGAN': real_lg['EmbeddingSimilarity'],
                                })
 
