@@ -24,7 +24,7 @@ def display_synth_data():
     # df5_styler = lsgan_data.head(5).style.set_table_attributes("style='display:inline'")
 
     hrule = '<hr style="width: 900px; margin-left:0;">'
-    container = df1_styler._repr_html_() + hrule + df2_styler._repr_html_() + hrule + df3_styler._repr_html_();
+    container = df1_styler._repr_html_() + hrule + df2_styler._repr_html_() + hrule + df3_styler._repr_html_() + hrule + df4_styler._repr_html_();
     file = open("results/synth_data.html", "w")
     file.write(container)
     file.close()
@@ -58,7 +58,7 @@ def display_metrics():
                                    'SeqGan': oracle_sg['nll-oracle'],
                                    'TextGan': oracle_tg['nll-oracle'],
                                    'CGan': oracle_cg[' nll-oracle'],
-                                    'InfoGan': oracle_ig['nll-oracle'],
+                                   'InfoGan': oracle_ig[' nll-oracle'],
                                    # 'LSGAN': oracle_lg['nll-oracle'],
                                    })
 
