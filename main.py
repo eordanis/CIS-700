@@ -7,7 +7,7 @@ from models.gsgan.Gsgan import Gsgan
 from models.leakgan.Leakgan import Leakgan
 from models.maligan_basic.Maligan import Maligan
 from models.cgan.Cgan import Cgan
-from models.Dcgan.Dcgan import Dcgan
+from models.dcgan.Dcgan import Dcgan
 from models.rankgan.Rankgan import Rankgan
 from models.seqgan.Seqgan import Seqgan
 from models.textGan_MMD.Textgan import TextganMmd
