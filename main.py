@@ -7,6 +7,7 @@ from models.gsgan.Gsgan import Gsgan
 from models.leakgan.Leakgan import Leakgan
 from models.maligan_basic.Maligan import Maligan
 from models.cgan.Cgan import Cgan
+from models.Dcgan.Dcgan import Dcgan
 from models.rankgan.Rankgan import Rankgan
 from models.seqgan.Seqgan import Seqgan
 from models.textGan_MMD.Textgan import TextganMmd
@@ -26,7 +27,7 @@ def set_gan(gan_name):
     gans['maligan'] = Maligan
     gans['cgan'] = Cgan
     #gans['2_Gan'] = 2_Gan
-    #gans['3_Gan'] = 3_Gan
+    gans['dcgan'] = Dcgan
     try:
         Gan = gans[gan_name.lower()]
         gan = Gan()
@@ -83,7 +84,7 @@ def parse_cmd(argv):
             opt_arg["-g"].append('gsgan')
             opt_arg["-g"].append('cgan')
             #opt_arg["-g"].append('2_Gan')
-            #opt_arg["-g"].append('3_Gan')
+            opt_arg["-g"].append('dcgan')
             for training in trainings:
              print("try with training.." + training)
              for value in opt_arg.values():
