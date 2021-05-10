@@ -15,7 +15,7 @@ from utils.text_process import *
 from utils.utils import *
 
 
-class Lsgan(Gan):
+class Dcgan(Gan):
     def __init__(self, oracle=None):
         super().__init__()
         # you can change parameters, generator here
@@ -31,9 +31,9 @@ class Lsgan(Gan):
         self.generate_num = 128
         self.start_token = 0
 
-        self.oracle_file = 'results/oracle_lsgan.txt'
-        self.generator_file = 'results/generator_lsgan.txt'
-        self.test_file = 'results/test_file_lsgan.txt'
+        self.oracle_file = 'results/oracle_dcgan.txt'
+        self.generator_file = 'results/generator_dcgan.txt'
+        self.test_file = 'results/test_file_dcgan.txt'
 
     def init_metric(self):
         nll = Nll(data_loader=self.oracle_data_loader, rnn=self.oracle, sess=self.sess)
@@ -107,7 +107,7 @@ class Lsgan(Gan):
         self.init_metric()
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.log = open('results/experiment-log-lsgan.csv', 'w')
+        self.log = open('results/experiment-log-dcgan.csv', 'w')
         generate_samples(self.sess, self.oracle, self.batch_size, self.generate_num, self.oracle_file)
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
@@ -200,7 +200,7 @@ class Lsgan(Gan):
         self.init_cfg_metric(grammar=cfg_grammar)
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.log = open('results/experiment-log-lsgan-cfg.csv', 'w')
+        self.log = open('results/experiment-log-dcgan-cfg.csv', 'w')
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
         self.oracle_data_loader.create_batches(self.generator_file)
@@ -299,7 +299,7 @@ class Lsgan(Gan):
 
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.log = open('results/experiment-log-lsgan-real.csv', 'w')
+        self.log = open('results/experiment-log-dcgan-real.csv', 'w')
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
 
