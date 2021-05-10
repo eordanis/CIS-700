@@ -49,7 +49,7 @@ def display_metrics():
                                  'SeqGan': oracle_sg['EmbeddingSimilarity'],
                                  'TextGan': oracle_tg['EmbeddingSimilarity'],
                                  'CGan': oracle_cg['EmbeddingSimilarity'],
-                                  'InfoGan': oracle_ig['EmbeddingSimilarity'],
+                                 'InfoGan': oracle_ig['EmbeddingSimilarity'],
                                  # 'LSGAN': oracle_lg['EmbeddingSimilarity'],
                                  })
 
@@ -67,7 +67,7 @@ def display_metrics():
                                     'SeqGan': oracle_sg['nll-test'],
                                     'TextGan': oracle_tg['nll-test'],
                                     'CGan': oracle_cg['nll-test'],
-                                     'InfoGan': oracle_ig['nll-test'],
+                                    'InfoGan': oracle_ig['nll-test'],
                                     # 'LSGAN': oracle_lg['nll-test'],
                                     })
 
@@ -76,7 +76,7 @@ def display_metrics():
                                'SeqGan': real_sg[' EmbeddingSimilarity'],
                                'TextGan': real_tg['EmbeddingSimilarity'],
                                'CGan': real_cg[' EmbeddingSimilarity'],
-                                'InfoGan': v_ig['EmbeddingSimilarity'],
+                               'InfoGan': real_ig['EmbeddingSimilarity'],
                                # 'LSGAN': real_lg['EmbeddingSimilarity'],
                                })
 
@@ -85,7 +85,7 @@ def display_metrics():
                                   'SeqGan': real_sg['nll-test'],
                                   'TextGan': real_tg['nll-test'],
                                   'CGan': real_cg['nll-test'],
-                                   'InfoGan': real_ig['nll-test'],
+                                  'InfoGan': real_ig['nll-test'],
                                   # 'LSGAN': real_lg['nll-test'],
                                   })
 
