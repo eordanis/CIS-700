@@ -36,12 +36,12 @@ def display_metrics():
     oracle_sg = pd.read_csv('results/experiment-log-seqgan.csv').iloc[:, : 4]
     oracle_tg = pd.read_csv('results/experiment-log-textgan.csv').iloc[:, : 4]
     oracle_cg = pd.read_csv('results/experiment-log-cgan.csv').iloc[:, : 4]
-     oracle_ig = pd.read_csv ('results/experiment-log-infogan.csv').iloc[:, : 4]
-     oracle_lg = pd.read_csv ('results/experiment-log-lsgan.csv').iloc[:, : 4]
+    oracle_ig = pd.read_csv ('results/experiment-log-infogan.csv').iloc[:, : 4]
+    #oracle_lg = pd.read_csv ('results/experiment-log-lsgan.csv').iloc[:, : 4]
     real_sg = pd.read_csv('results/experiment-log-seqgan-real.csv').iloc[:, : 3]
     real_tg = pd.read_csv('results/experiment-log-textgan-real.csv').iloc[:, : 3]
     real_cg = pd.read_csv('results/experiment-log-cgan-real.csv').iloc[:, : 3]
-     real_ig = pd.read_csv ('results/experiment-log-infogan-real.csv').iloc[:, : 3]
+    real_ig = pd.read_csv ('results/experiment-log-infogan-real.csv').iloc[:, : 3]
     # real_lg = pd.read_csv ('results/experiment-log-lsgan-real.csv').iloc[:, : 3]
 
     # Create new dataframe to represent Oracle EmbeddingSimilarity across all models

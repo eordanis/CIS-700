@@ -2,10 +2,10 @@ import json
 from time import time
 
 from models.Gan import Gan
-from models.Infogan.InfoganDataLoader import DataLoader, DisDataloader
-from models.Infogan.InfoganDiscriminator import Discriminator
-from models.Infogan.InfoganGenerator import Generator
-from models.Infogan.InfoganReward import Reward
+from models.infogan.InfoganDataLoader import DataLoader, DisDataloader
+from models.infogan.InfoganDiscriminator import Discriminator
+from models.infogan.InfoganGenerator import Generator
+from models.infogan.InfoganReward import Reward
 from utils.metrics.Cfg import Cfg
 from utils.metrics.EmbSim import EmbSim
 from utils.metrics.Nll import Nll

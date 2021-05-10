@@ -37,7 +37,7 @@ def highway(input_, size, num_layers=1, bias=-2.0, f=tf.compat.v1.nn.relu, scope
     where g is nonlinearity, t is transform gate, and (1 - t) is carry gate.
     """
 
-    with tf.compat.v1.variable_scope(scope):
+    with tf.compat.v1.variable_scope(scope, reuse=tf.compat.v1.AUTO_REUSE):
         for idx in range(num_layers):
             g = f(linear(input_, size, scope='highway_lin_%d' % idx))
 
@@ -145,12 +145,12 @@ class Discriminator(object):
             self.h_pool_flat = tf.compat.v1.reshape(self.h_pool, [-1, num_filters_total])
 
             # Add highway
-            with tf.compat.v1.name_scope("highway"):
+            with tf.compat.v1.name_scope("highway2"):
                 self.h_highway = highway(self.h_pool_flat, self.h_pool_flat.get_shape()[1], 1, 0)
 
             # Add dropout
-            with tf.compat.v1.name_scope("dropout"):
-                self.h_drop = tf.compat.v1.nn.dropout(self.h_highway, self.dropout_keep_prob)
+            #with tf.compat.v1.name_scope("dropout2"):
+                #self.h_drop = tf.compat.v1.nn.dropout(self.h_highway, self.dropout_keep_prob)
 
             #Batch Normalization - line 103
             tf.compat.v1.layers.BatchNormalization(
@@ -161,7 +161,7 @@ class Discriminator(object):
               moving_variance_initializer=tf.ones_initializer(), beta_regularizer=None,
               gamma_regularizer=None, beta_constraint=None, gamma_constraint=None,
               renorm=False, renorm_clipping=None, renorm_momentum=0.99, fused=None,
-              trainable=True, virtual_batch_size=None, adjustment=None, name=None, **kwargs
+              trainable=True, virtual_batch_size=None, adjustment=None, name=None
             )
 
             # Final (unnormalized) scores and predictions
