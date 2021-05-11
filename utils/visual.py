@@ -1,37 +1,54 @@
 import pandas as pd
 from IPython.display import display_html
 import matplotlib.pyplot as plt
+import os
+
+directory = '/content/CIS-700/results' # update as needed
+experiment_pref = 'experiment-log-'
+test_file_pref = 'test_file_'
+csv_ext = '.csv'
+txt_ext = '.txt'
 
 
 def display_synth_data():
-    # prep the real synthetic text dataframes
-    seqgan_data = pd.read_csv('results/test_file_seqgan_real.txt', sep="\n", header=None)
-    seqgan_data.columns = ["SeqGAN Synth Data"]
-    textgan_data = pd.read_csv('results/test_file_textgan_real.txt', sep="\n", header=None)
-    textgan_data.columns = ["TextGAN Synth Data"]
-    cgan_data = pd.read_csv('results/test_file_cgan_real_real.txt', sep="\n", header=None)
-    cgan_data.columns = ["CGAN Synth Data"]
-    infogan_data = pd.read_csv('results/test_file_infogan_real.txt', sep="\n", header=None)
-    infogan_data.columns = ["InfoGAN Synth Data"]
-    # dcgan_data = pd.read_csv('results/test_file_dcgan_real.txt', sep="\n", header=None)
-    # dcgan_data.columns = ["DCGAN Synth Data"]
+    container = ''
+    for filename in os.listdir(directory):
+        if filename.startswith(test_file_pref) and filename.endswith(txt_ext):
+            fn_split = filename.split(test_file_pref)[1].split(txt_ext)[0].split('_')
+            if len(fn_split) == 2:
+                model = fn_split[0]
+                training = fn_split[1]
+                df = pd.read_csv('results/' + filename, sep="\n", header=None)
+                df.columns = [model + " " + training + " Synth Data"]
+                df_styler = df.head(5).style.set_table_attributes("style='display:inline'")
+                if container != '':
+                    container += '<hr style="width: 900px; margin-left:0;">'
+                container += df_styler._repr_html_()
 
-    # style synth data for inline display
-    df1_styler = seqgan_data.head(5).style.set_table_attributes("style='display:inline'")
-    df2_styler = textgan_data.head(5).style.set_table_attributes("style='display:inline'")
-    df3_styler = cgan_data.head(5).style.set_table_attributes("style='display:inline'")
-    df4_styler = infogan_data.head(5).style.set_table_attributes("style='display:inline'")
-    # df5_styler = dcgan_data.head(5).style.set_table_attributes("style='display:inline'")
-
-    hrule = '<hr style="width: 900px; margin-left:0;">'
-    container = df1_styler._repr_html_() + hrule + df2_styler._repr_html_() + hrule + df3_styler._repr_html_() + hrule + df4_styler._repr_html_()
-    file = open("results/real_synth_data.html", "w")
-    file.write(container)
-    file.close()
-    display_html(container, raw=True)
+    if container != '':
+        file = open("results/real_synth_data.html", "w")
+        file.write(container)
+        file.close()
+        display_html(container, raw=True)
 
 
 def display_metrics():
+    df_list = []
+    labels = []
+    for filename in os.listdir(directory):
+        if filename.startswith(experiment_pref) and filename.endswith(csv_ext):
+            fn_split = filename.split(experiment_pref)[1].split(csv_ext)[0].split('-')
+            if len(fn_split) == 2:
+                model = fn_split[0]
+                training = fn_split[1]
+                idx = 4
+                if training == 'real':
+                    idx = 3
+                #in progress
+                df = pd.read_csv('results/' + filename, sep="\n", header=None)  # .iloc[:, :idx]
+                df_list.append(df)
+                labels.append(model)
+
     # prep the metric dataframes
     oracle_sg = pd.read_csv('results/experiment-log-seqgan.csv').iloc[:, : 4]
     oracle_tg = pd.read_csv('results/experiment-log-textgan.csv').iloc[:, : 4]
@@ -104,7 +121,7 @@ def display_metrics():
     plt.subplots_adjust(wspace=0.2, hspace=0.5)
     for r in range(nrow):
         for c in range(ncol):
-            if (count < 5):
+            if count < 5:
                 df_list[count].plot(ax=axes[r, c], x='Epochs', y=['SeqGan', 'TextGan', 'CGan', 'InfoGan'], kind='line',
                                     title=df_title_list[count], figsize=(20, 10))
                 count += 1
