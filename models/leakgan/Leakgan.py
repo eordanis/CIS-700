@@ -186,29 +186,30 @@ class Leakgan(Gan):
         self.reward = Reward(model=self.generator, dis=self.discriminator, sess=self.sess, rollout_num=4)
         for epoch in range(self.adversarial_epoch_num):
             #for epoch_ in range(10):
-                for index in range(1):
-                    start = time()
-                    samples = self.generator.generate(self.sess, 1)
-                    rewards = self.reward.get_reward(samples)
-                    feed = {
-                        self.generator.x: samples,
-                        self.generator.reward: rewards,
-                        self.generator.drop_out: 1
-                    }
-                    _, _, g_loss, w_loss = self.sess.run(
-                        [self.generator.manager_updates, self.generator.worker_updates, self.generator.goal_loss,
-                         self.generator.worker_loss, ], feed_dict=feed)
-                    end = time()
-                    if self.epoch % 5 == 0 or self.epoch == self.adversarial_epoch_num - 1:
-                        generate_samples_gen(self.sess, self.generator, self.batch_size, self.generate_num,
-                                             self.generator_file)
-                        self.evaluate()
-                    self.add_epoch()
+            for index in range(1):
+                start = time()
+                samples = self.generator.generate(self.sess, 1)
+                rewards = self.reward.get_reward(samples)
+                feed = {
+                    self.generator.x: samples,
+                    self.generator.reward: rewards,
+                    self.generator.drop_out: 1
+                }
+                _, _, g_loss, w_loss = self.sess.run(
+                    [self.generator.manager_updates, self.generator.worker_updates, self.generator.goal_loss,
+                     self.generator.worker_loss, ], feed_dict=feed)
+                end = time()
+                self.add_epoch()
+                if epoch % 5 == 0 or epoch == self.adversarial_epoch_num - 1:
+                    generate_samples_gen(self.sess, self.generator, self.batch_size, self.generate_num,
+                                         self.generator_file)
+                    self.evaluate()
 
-
-                for _ in range(15):
-                    self.train_discriminator()
-            #for epoch_ in range(5):
+            for _ in range(15):
+                self.train_discriminator()
+            '''
+            #seems like authors maybe added duplicate/excess calls?
+            for epoch_ in range(5):
                 start = time()
                 loss = pre_train_epoch_gen(self.sess, self.generator, self.gen_data_loader)
                 end = time()
@@ -217,8 +218,9 @@ class Leakgan(Gan):
                     generate_samples_gen(self.sess, self.generator, self.batch_size, self.generate_num,
                                          self.generator_file)
                     # self.evaluate()
-            #for epoch_ in range(5):
+            for epoch_ in range(5):
                 self.train_discriminator()
+            '''
         self.log.close()
     def init_cfg_training(self, grammar=None):
         from utils.oracle.OracleCfg import OracleCfg
@@ -307,28 +309,31 @@ class Leakgan(Gan):
         print('adversarial training:')
         self.reward = Reward(model=self.generator, dis=self.discriminator, sess=self.sess, rollout_num=4)
         for epoch in range(self.adversarial_epoch_num):
-            for epoch_ in range(10):
-                start = time()
-                for index in range(1):
-                    samples = self.generator.generate(self.sess, 1)
-                    rewards = self.reward.get_reward(samples)
-                    feed = {
-                        self.generator.x: samples,
-                        self.generator.reward: rewards,
-                        self.generator.drop_out: 1
-                    }
-                    _, _, g_loss, w_loss = self.sess.run(
-                        [self.generator.manager_updates, self.generator.worker_updates, self.generator.goal_loss,
-                         self.generator.worker_loss, ], feed_dict=feed)
-                end = time()
-                self.add_epoch()
-                if epoch % 5 == 0 or epoch == self.adversarial_epoch_num - 1:
-                    generate_samples_gen(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
-                    get_cfg_test_file()
-                    self.evaluate()
+            #for epoch_ in range(10):
+            start = time()
+            for index in range(1):
+                samples = self.generator.generate(self.sess, 1)
+                rewards = self.reward.get_reward(samples)
+                feed = {
+                    self.generator.x: samples,
+                    self.generator.reward: rewards,
+                    self.generator.drop_out: 1
+                }
+                _, _, g_loss, w_loss = self.sess.run(
+                    [self.generator.manager_updates, self.generator.worker_updates, self.generator.goal_loss,
+                     self.generator.worker_loss, ], feed_dict=feed)
+            end = time()
+            self.add_epoch()
+            if epoch % 5 == 0 or epoch == self.adversarial_epoch_num - 1:
+                generate_samples_gen(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
+                get_cfg_test_file()
+                self.evaluate()
 
-                for _ in range(15):
-                    self.train_discriminator()
+            for _ in range(15):
+                self.train_discriminator()
+
+            '''
+            #seems like authors maybe added duplicate/excess calls?
             for epoch_ in range(5):
                 start = time()
                 loss = pre_train_epoch_gen(self.sess, self.generator, self.gen_data_loader)
@@ -341,7 +346,7 @@ class Leakgan(Gan):
                     self.evaluate()
             for epoch_ in range(5):
                 self.train_discriminator()
-
+            '''
     def init_real_trainng(self, data_loc=None):
         from utils.text_process import text_precess, text_to_code
         from utils.text_process import get_tokenlized, get_word_list, get_dict
@@ -428,28 +433,30 @@ class Leakgan(Gan):
         self.reset_epoch()
         self.reward = Reward(model=self.generator, dis=self.discriminator, sess=self.sess, rollout_num=4)
         for epoch in range(self.adversarial_epoch_num):
-            for epoch_ in range(10):
-                start = time()
-                for index in range(1):
-                    samples = self.generator.generate(self.sess, 1)
-                    rewards = self.reward.get_reward(samples)
-                    feed = {
-                        self.generator.x: samples,
-                        self.generator.reward: rewards,
-                        self.generator.drop_out: 1
-                    }
-                    _, _, g_loss, w_loss = self.sess.run(
-                        [self.generator.manager_updates, self.generator.worker_updates, self.generator.goal_loss,
-                         self.generator.worker_loss, ], feed_dict=feed)
-                end = time()
-                self.add_epoch()
-                if epoch % 5 == 0 or epoch == self.adversarial_epoch_num - 1:
-                    generate_samples_gen(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
-                    get_real_test_file()
-                    self.evaluate()
+            #for epoch_ in range(10):
+            start = time()
+            for index in range(1):
+                samples = self.generator.generate(self.sess, 1)
+                rewards = self.reward.get_reward(samples)
+                feed = {
+                    self.generator.x: samples,
+                    self.generator.reward: rewards,
+                    self.generator.drop_out: 1
+                }
+                _, _, g_loss, w_loss = self.sess.run(
+                    [self.generator.manager_updates, self.generator.worker_updates, self.generator.goal_loss,
+                     self.generator.worker_loss, ], feed_dict=feed)
+            end = time()
+            self.add_epoch()
+            if epoch % 5 == 0 or epoch == self.adversarial_epoch_num - 1:
+                generate_samples_gen(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
+                get_real_test_file()
+                self.evaluate()
 
-                for _ in range(15):
-                    self.train_discriminator()
+            for _ in range(15):
+                self.train_discriminator()
+            '''
+            #seems like authors maybe added duplicate/excess calls?
             for epoch_ in range(5):
                 start = time()
                 loss = pre_train_epoch_gen(self.sess, self.generator, self.gen_data_loader)
@@ -461,4 +468,5 @@ class Leakgan(Gan):
                     # self.evaluate()
             for epoch_ in range(5):
                 self.train_discriminator()
+            '''
 
