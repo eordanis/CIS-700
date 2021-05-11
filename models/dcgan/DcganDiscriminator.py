@@ -67,6 +67,7 @@ class Discriminator(object):
         y_fill = tf.compat.v1.placeholder(tf.compat.v1.float32, shape=(None, sequence_length, sequence_length, 10))
         self.dropout_keep_prob = dropout_keep_prob
         # self.dropout_keep_prob = tf.compat.v1.placeholder(tf.compat.v1.float32, name="dropout_keep_prob")
+        num_filters_total = sum(num_filters)
 
         # Keeping track of l2 regularization loss (optional)
         l2_loss = tf.compat.v1.constant(0.0)
@@ -134,7 +135,7 @@ class Discriminator(object):
             lrelu2 = tf.nn.leaky_relu(tf.compat.v1.layers.batch_normalization(conv2, training=False), 0.2)
 
             # output layer
-            conv3 = tf.compat.v1.layers.conv2d(lrelu2, 1, [7, 7], strides=(1, 1), padding='valid', kernel_initializer=w_init)
+            conv3 = tf.compat.v1.layers.conv2d(lrelu2, 300, [5, 5], strides=(1, 1), padding='valid', kernel_initializer=w_init)
             o = tf.nn.sigmoid(conv3)
 
             # Final (unnormalized) scores and predictions
@@ -143,7 +144,7 @@ class Discriminator(object):
                 b = tf.compat.v1.Variable(tf.compat.v1.constant(0.1, shape=[num_classes]), name="b")
                 l2_loss += tf.compat.v1.nn.l2_loss(W)
                 l2_loss += tf.compat.v1.nn.l2_loss(b)
-                self.scores = tf.compat.v1.nn.xw_plus_b(self.h_drop, W, b, name="scores")
+                self.scores = tf.compat.v1.nn.xw_plus_b(o, W, b, name="scores")
                 self.ypred_for_auc = tf.compat.v1.nn.softmax(self.scores)
                 self.predictions = tf.compat.v1.argmax(self.scores, 1, name="predictions")
 
@@ -153,7 +154,7 @@ class Discriminator(object):
                 self.loss = tf.compat.v1.reduce_mean(losses) + l2_reg_lambda * l2_loss
                 self.d_loss = tf.compat.v1.reshape(tf.compat.v1.reduce_mean(self.loss), shape=[1])
 
-        self.params = [param for param in tf.compat.v1.trainable_variables() if 'discriminator' in param.name]
-        d_optimizer = tf.compat.v1.train.AdamOptimizer(1e-4)
-        grads_and_vars = d_optimizer.compute_gradients(self.loss, self.params, aggregation_method=2)
-        self.train_op = d_optimizer.apply_gradients(grads_and_vars)
+            self.params = [param for param in tf.compat.v1.trainable_variables() if 'discriminator' in param.name]
+            d_optimizer = tf.compat.v1.train.AdamOptimizer(1e-4)
+            grads_and_vars = d_optimizer.compute_gradients(self.loss, self.params, aggregation_method=2)
+            self.train_op = d_optimizer.apply_gradients(grads_and_vars)
