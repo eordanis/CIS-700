@@ -98,7 +98,7 @@ def display_metrics(directory=None):
 
     # Create new dataframe to represent Real EmbeddingSimilarity across all models
     real_embed = pd.DataFrame({'Epochs': [1, 6, 10],
-                               'SeqGan': real_sg[' EmbeddingSimilarity'],
+                               'SeqGan': real_sg['EmbeddingSimilarity'],
                                'TextGan': real_tg['EmbeddingSimilarity'],
                                'CGan': real_cg['EmbeddingSimilarity'],
                                'InfoGan': real_ig['EmbeddingSimilarity'],
