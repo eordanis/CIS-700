@@ -13,7 +13,7 @@ def display_synth_data(directory=None):
     container = ''
 
     if directory is None:
-        directory = '/content/CIS-700/results'
+        directory = '/content/CIS-700/results/'
 
     for filename in os.listdir(directory):
         if filename.startswith(test_file_pref) and filename.endswith(txt_ext):
@@ -40,7 +40,7 @@ def display_metrics(directory=None):
     labels = []
 
     if directory is None:
-        directory = '/content/CIS-700/results'
+        directory = '/content/CIS-700/results/'
 
     for filename in os.listdir(directory):
         if filename.startswith(experiment_pref) and filename.endswith(csv_ext):
