@@ -8,6 +8,22 @@ Stephanie:
 				    1. location: utis/visual.py
                 b. cleaned up code and took test text files for synthetic data generated and put into dataframes for a more visual experience
             5. Generic code cleanup in files, removed residual hard coded epoch setters so that all files make use of main GAN setter
+            
+            Further modifications as part of Midterm efforts:
+                Additional modifications applied to this project under this midterm work:
+                    * Fixed LeakGAN project to work and run properly by setting standardized default flag attributes in main.py
+                    * Update models to save off test files for each training type run (ie oracle, cfg, real)
+                    * Updated models to use unified naming schema for test files, with model as the model the file was generated for and training as the training the data was generated from
+
+                        **Example:**
+                            * experiment-log-model-training.csv
+                            * oracle-model-training.txt
+                            * generator-model-training.txt
+                            * test_file-model-training.txt
+
+                    * Updated visual.py to grab files from directory and generate visual charts from relevant files
+                    * Updated models to set file name in main.py on the GAN model directly instead of in each model file themselves
+                    * Added additional field called 'log_file' to be the name for the experiment-log file data
 Jackson:
 			1. Added INFOGAN model to code as per M2 requirement and discussed it
 Ravjot:
