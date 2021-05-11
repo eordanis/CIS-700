@@ -101,7 +101,7 @@ def parse_cmd(argv):
             opt_arg["-g"].append('gsgan')
             opt_arg["-g"].append('cgan')
             opt_arg["-g"].append('dcgan')
-            opt_arg["-g"].append('Infogan')
+            opt_arg["-g"].append('infogan')
             for training in trainings:
                 print("try with training.." + training)
                 for value in opt_arg.values():
