@@ -44,6 +44,7 @@ class Infogan(Gan):
         docsim = DocEmbSim(oracle_file=self.oracle_file, generator_file=self.generator_file, num_vocabulary=self.vocab_size)
         self.add_metric(docsim)
 
+    #train
     def train_discriminator(self):
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.dis_data_loader.load_train_data(self.oracle_file, self.generator_file)

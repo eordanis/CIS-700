@@ -50,10 +50,8 @@ def highway(input_, size, num_layers=1, bias=-2.0, f=tf.compat.v1.nn.relu, scope
 
 
 class Discriminator(object):
-    """
-    A CNN for text classification.
-    Uses an embedding layer, followed by a convolutional, max-pooling and softmax layer.
-    """
+    
+
 
     def __init__(
             self, sequence_length, num_classes, vocab_size,
@@ -90,7 +88,7 @@ class Discriminator(object):
                         strides=[1, 1, 1, 1],
                         padding="VALID",
                         name="conv")
-                    # Apply nonlinearity
+                    # relu
                     h = tf.compat.v1.nn.relu(tf.compat.v1.nn.bias_add(conv, b), name="relu")
                     # Maxpooling over the outputs
                     pooled = tf.compat.v1.nn.max_pool(
@@ -110,12 +108,23 @@ class Discriminator(object):
             with tf.compat.v1.name_scope("highway"):
                 self.h_highway = highway(self.h_pool_flat, self.h_pool_flat.get_shape()[1], 1, 0)
 
+            tf.compat.v1.layers.BatchNormalization(
+              axis=-1, momentum=0.8, epsilon=0.001, center=True, scale=True,
+              beta_initializer=tf.zeros_initializer(),
+              gamma_initializer=tf.ones_initializer(),
+              moving_mean_initializer=tf.zeros_initializer(),
+              moving_variance_initializer=tf.ones_initializer(), beta_regularizer=None,
+              gamma_regularizer=None, beta_constraint=None, gamma_constraint=None,
+              renorm=False, renorm_clipping=None, renorm_momentum=0.99, fused=None,
+              trainable=True, virtual_batch_size=None, adjustment=None, name=None
+            )
+
             # Add dropout
             with tf.compat.v1.name_scope("dropout"):
                 self.h_drop = tf.compat.v1.nn.dropout(self.h_highway, self.dropout_keep_prob)
 
-                        # Create a convolution + maxpool layer for each filter size
-            ##pooled_outputs = []
+            # Create a convolution + maxpool layer for each filter size
+
             for filter_size, num_filter in zip(filter_sizes, num_filters):
                 with tf.compat.v1.name_scope("conv-maxpool-%s" % filter_size):
                     # Convolution Layer
@@ -128,7 +137,7 @@ class Discriminator(object):
                         strides=[1, 1, 1, 1],
                         padding="VALID",
                         name="conv")
-                    # Apply nonlinearity
+                    # relu
                     h = tf.compat.v1.nn.relu(tf.compat.v1.nn.bias_add(conv, b), name="relu")
                     # Maxpooling over the outputs
                     pooled = tf.compat.v1.nn.max_pool(
@@ -152,9 +161,9 @@ class Discriminator(object):
             #with tf.compat.v1.name_scope("dropout2"):
                 #self.h_drop = tf.compat.v1.nn.dropout(self.h_highway, self.dropout_keep_prob)
 
-            #Batch Normalization - line 103
+            #Batch Normalization
             tf.compat.v1.layers.BatchNormalization(
-              axis=-1, momentum=0.99, epsilon=0.001, center=True, scale=True,
+              axis=-1, momentum=0.8, epsilon=0.001, center=True, scale=True,
               beta_initializer=tf.zeros_initializer(),
               gamma_initializer=tf.ones_initializer(),
               moving_mean_initializer=tf.zeros_initializer(),
