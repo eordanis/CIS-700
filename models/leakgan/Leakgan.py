@@ -72,13 +72,9 @@ class Leakgan(Gan):
         self.dis_embedding_dim = 64
         self.goal_size = 16
 
-        self.oracle_file = 'results/oracle_leakgan.txt'
-        self.generator_file = 'results/generator_leakgan.txt'
-        self.test_file = 'results/test_file_leakgan.txt'
 
     def init_oracle_trainng(self, oracle=None):
         goal_out_size = sum(self.num_filters)
-
         if oracle is None:
             oracle = OracleLstm(num_vocabulary=self.vocab_size, batch_size=self.batch_size, emb_dim=self.emb_dim,
                                 hidden_dim=self.hidden_dim, sequence_length=self.sequence_length,
@@ -143,7 +139,7 @@ class Leakgan(Gan):
             self.oracle_data_loader.create_batches(self.generator_file)
         if self.log is not None:
             if self.epoch == 0 or self.epoch == 1:
-                self.log.write('epoch,')
+                self.log.write('epochs,')
                 for metric in self.metrics:
                     self.log.write(metric.get_name() + ',')
                 self.log.write('\n')
@@ -161,7 +157,7 @@ class Leakgan(Gan):
         self.init_metric()
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.log = open('results/experiment-log-leakgan.csv', 'w')
+        self.log = open(self.log_file, 'w')
         generate_samples(self.sess, self.oracle, self.batch_size, self.generate_num, self.oracle_file)
         generate_samples_gen(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
@@ -188,8 +184,8 @@ class Leakgan(Gan):
         print('adversarial training:')
 
         self.reward = Reward(model=self.generator, dis=self.discriminator, sess=self.sess, rollout_num=4)
-        for epoch in range(self.adversarial_epoch_num//10):
-            for epoch_ in range(10):
+        for epoch in range(self.adversarial_epoch_num):
+            #for epoch_ in range(10):
                 for index in range(1):
                     start = time()
                     samples = self.generator.generate(self.sess, 1)
@@ -212,7 +208,7 @@ class Leakgan(Gan):
 
                 for _ in range(15):
                     self.train_discriminator()
-            for epoch_ in range(5):
+            #for epoch_ in range(5):
                 start = time()
                 loss = pre_train_epoch_gen(self.sess, self.generator, self.gen_data_loader)
                 end = time()
@@ -221,7 +217,7 @@ class Leakgan(Gan):
                     generate_samples_gen(self.sess, self.generator, self.batch_size, self.generate_num,
                                          self.generator_file)
                     # self.evaluate()
-            for epoch_ in range(5):
+            #for epoch_ in range(5):
                 self.train_discriminator()
         self.log.close()
     def init_cfg_training(self, grammar=None):
@@ -287,7 +283,7 @@ class Leakgan(Gan):
         self.init_cfg_metric(grammar=cfg_grammar)
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.log = open('results/experiment-log-leakganbasic-cfg.csv', 'w')
+        self.log = open(self.log_file, 'w')
         generate_samples_gen(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
         self.oracle_data_loader.create_batches(self.generator_file)
@@ -310,7 +306,7 @@ class Leakgan(Gan):
         self.reset_epoch()
         print('adversarial training:')
         self.reward = Reward(model=self.generator, dis=self.discriminator, sess=self.sess, rollout_num=4)
-        for epoch in range(self.adversarial_epoch_num//10):
+        for epoch in range(self.adversarial_epoch_num):
             for epoch_ in range(10):
                 start = time()
                 for index in range(1):
@@ -405,7 +401,7 @@ class Leakgan(Gan):
 
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.log = open('results/experiment-log-leakgan-real.csv', 'w')
+        self.log = open(self.log_file, 'w')
         generate_samples_gen(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
 
@@ -431,7 +427,7 @@ class Leakgan(Gan):
 
         self.reset_epoch()
         self.reward = Reward(model=self.generator, dis=self.discriminator, sess=self.sess, rollout_num=4)
-        for epoch in range(self.adversarial_epoch_num//10):
+        for epoch in range(self.adversarial_epoch_num):
             for epoch_ in range(10):
                 start = time()
                 for index in range(1):

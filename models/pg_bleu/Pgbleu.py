@@ -27,8 +27,6 @@ class Pgbleu(Gan):
         self.generate_num = 128
         self.start_token = 0
 
-        self.oracle_file = 'results/oracle_pgbleu3.txt'
-        self.generator_file = 'results/generator_pgbleu3.txt'
 
     def init_oracle_trainng(self, oracle=None):
         if oracle is None:
@@ -77,7 +75,7 @@ class Pgbleu(Gan):
         self.oracle_data_loader.create_batches(self.generator_file)
         if self.log is not None:
             if self.epoch == 0 or self.epoch == 1:
-                self.log.write('epoch,')
+                self.log.write('epochs,')
                 for metric in self.metrics:
                     self.log.write(metric.get_name() + ',')
                 self.log.write('\n')
@@ -95,7 +93,7 @@ class Pgbleu(Gan):
         self.init_oracle_trainng()
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.log = open('results/experiment-log-pgbleu3.csv', 'w')
+        self.log = open(self.log_file, 'w')
         generate_samples(self.sess, self.oracle, self.batch_size, self.generate_num, self.oracle_file)
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)

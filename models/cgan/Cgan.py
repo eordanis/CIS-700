@@ -31,9 +31,6 @@ class Cgan(Gan):
         self.generate_num = 128
         self.start_token = 0
 
-        self.oracle_file = 'results/oracle_cgan.txt'
-        self.generator_file = 'results/generator_cgan.txt'
-        self.test_file = 'results/test_file_cgan.txt'
 
     def init_oracle_trainng(self, oracle=None):
         if oracle is None:
@@ -105,7 +102,7 @@ class Cgan(Gan):
             self.oracle_data_loader.create_batches(self.generator_file)
         if self.log is not None:
             if self.epoch == 0 or self.epoch == 1:
-                self.log.write('epochs, ')
+                self.log.write('epochs,')
                 for metric in self.metrics:
                     print(metric.get_name())
                     self.log.write(metric.get_name() + ',')
@@ -124,7 +121,7 @@ class Cgan(Gan):
         self.init_metric()
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.log = open('results/experiment-log-cgan.csv', 'w')
+        self.log = open(self.log_file, 'w')
         generate_samples(self.sess, self.oracle, self.batch_size, self.generate_num, self.oracle_file)
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
@@ -211,7 +208,7 @@ class Cgan(Gan):
         self.init_cfg_metric(grammar=cfg_grammar)
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.log = open('results/experiment-log-cgan-cfg.csv', 'w')
+        self.log = open(self.log_file, 'w')
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
         self.oracle_data_loader.create_batches(self.generator_file)
@@ -300,7 +297,7 @@ class Cgan(Gan):
 
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.log = open('results/experiment-log-cgan-real.csv', 'w')
+        self.log = open(self.log_file, 'w')
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
 

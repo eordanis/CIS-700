@@ -28,9 +28,6 @@ class Rankgan(Gan):
         self.generate_num = 128
         self.start_token = 0
 
-        self.oracle_file = 'results/oracle_rankgan.txt'
-        self.generator_file = 'results/generator_rankgan.txt'
-        self.test_file = 'results/test_file_rankgan.txt'
 
     def init_oracle_trainng(self, oracle=None):
         if oracle is None:
@@ -89,7 +86,7 @@ class Rankgan(Gan):
         if self.log is not None:
             print("write to file")
             if self.epoch == 0 or self.epoch == 1:
-                self.log.write('epoch,')
+                self.log.write('epochs,')
                 for metric in self.metrics:
                     print(metric.get_name())
                     self.log.write(metric.get_name() + ',')
@@ -112,7 +109,7 @@ class Rankgan(Gan):
         self.init_oracle_trainng()
         self.init_metric()
         self.sess.run(tf.compat.v1.global_variables_initializer())
-        self.log = open('results/experiment-log-rankgan.csv', 'w')
+        self.log = open(self.log_file, 'w')
         generate_samples(self.sess, self.oracle, self.batch_size, self.generate_num, self.oracle_file)
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
@@ -211,7 +208,7 @@ class Rankgan(Gan):
         self.init_cfg_metric(grammar=cfg_grammar)
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.log = open('results/experiment-log-rankgan-cfg.csv', 'w')
+        self.log = open(self.log_file, 'w')
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
         self.oracle_data_loader.create_batches(self.generator_file)
@@ -308,7 +305,7 @@ class Rankgan(Gan):
 
         self.sess.run(tf.compat.v1.global_variables_initializer())
 
-        self.log = open('results/experiment-log-rankgan-real.csv', 'w')
+        self.log = open(self.log_file, 'w')
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
 

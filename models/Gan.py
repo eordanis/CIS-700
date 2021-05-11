@@ -18,6 +18,10 @@ class Gan:
         self.adversarial_epoch_num = 5
         self.log = None
         self.reward = None
+        self.oracle_file = None
+        self.generator_file = None
+        self.test_file = None
+        self.log_file = None
 
     def set_oracle(self, oracle):
         self.oracle = oracle
