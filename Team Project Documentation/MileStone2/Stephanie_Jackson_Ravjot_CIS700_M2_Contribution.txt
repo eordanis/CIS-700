@@ -24,7 +24,10 @@ Stephanie:
                     * Updated visual.py to grab files from directory and generate visual charts from relevant files
                     * Updated models to set file name in main.py on the GAN model directly instead of in each model file themselves
                     * Added additional field called 'log_file' to be the name for the experiment-log file data
+                    * Update to add new dir for midterm content vs milestone project
+                    * Allow visual.py to take directory param. if none exist, default to /content/CIS-700/results
+                    * Allow main.py to take a results output directory via arg -o, if arg not present sets to results/
 Jackson:
-			1. Added INFOGAN model to code as per M2 requirement and discussed it
+			1. Added InfoGAN model to code as per M2 requirement and discussed it
 Ravjot:
-			1. Added LSGAN model to code as per M2 requirement and discussed it
+			1. Added DCGAN model to code as per M2 requirement and discussed it

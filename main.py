@@ -27,11 +27,11 @@ beginMsg = "******** Beginning Training ********"
 completeMsg = "******** Completed Training ********\n"
 
 
-def get_updated_file_name(file_name, gan_name, training, ext, sep):
-    return 'results/' + file_name + sep + gan_name + sep + training + ext
+def get_updated_file_name(dir_loc, file_name, gan_name, training, ext, sep):
+    return dir_loc + file_name + sep + gan_name + sep + training + ext
 
 
-def set_gan(gan_name, training):
+def set_gan(gan_name, training, dir_loc):
     gans = dict()
     gans['seqgan'] = Seqgan
     gans['gsgan'] = Gsgan
@@ -47,10 +47,10 @@ def set_gan(gan_name, training):
         gan = Gan()
         gan.vocab_size = 5000
         gan.generate_num = 10000
-        gan.oracle_file = get_updated_file_name('oracle', gan_name, training, '.txt', '_')
-        gan.generator_file = get_updated_file_name('generator', gan_name, training, '.txt', '_')
-        gan.test_file = get_updated_file_name('test_file', gan_name, training, '.txt', '_')
-        gan.log_file = get_updated_file_name('experiment-log', gan_name, training, '.csv', '-')
+        gan.oracle_file = get_updated_file_name(dir_loc, 'oracle', gan_name, training, '.txt', '_')
+        gan.generator_file = get_updated_file_name(dir_loc, 'generator', gan_name, training, '.txt', '_')
+        gan.test_file = get_updated_file_name(dir_loc, 'test_file', gan_name, training, '.txt', '_')
+        gan.log_file = get_updated_file_name(dir_loc, 'experiment-log', gan_name, training, '.csv', '-')
         return gan
     except KeyError:
         print(Fore.RED + 'Unsupported GAN type: ' + gan_name + Fore.RESET)
@@ -78,6 +78,7 @@ def set_training(gan, training_method):
 
 def parse_cmd(argv):
     try:
+        dir_loc = 'results/'
         argvals = ' '.join(argv)
         if argvals == '':
             print(beginMsg)
@@ -102,6 +103,7 @@ def parse_cmd(argv):
             opt_arg["-g"].append('cgan')
             opt_arg["-g"].append('dcgan')
             opt_arg["-g"].append('infogan')
+
             for training in trainings:
                 print("try with training.." + training)
                 for value in opt_arg.values():
@@ -109,7 +111,7 @@ def parse_cmd(argv):
                         try:
                             print("training GAN..." + ganName)
                             try:
-                                gan = set_gan(ganName, training)
+                                gan = set_gan(ganName, training, dir_loc)
                             except Exception as e:
                                 print("setGan exception")
                                 print(e)
@@ -140,22 +142,29 @@ def parse_cmd(argv):
         else:
             print(beginMsg)
             gan = None
-            opts, args = getopt.getopt(argv, "hg:t:d:")
+            opts, args = getopt.getopt(argv, "hg:t:d:o:")
             opt_arg = dict(opts)
             if '-h' in opt_arg.keys():
                 print('usage: python main.py -g <gan_type>')
                 print('       python main.py -g <gan_type> -t <train_type>')
                 print('       python main.py -g <gan_type> -t realdata -d <your_data_location>')
+                print('       python main.py -g <gan_type> -t realdata -d <your_data_location> -o <output_dir_for_results>')
                 sys.exit(0)
             training = 'oracle'
             if '-t' in opt_arg.keys():
                 training = opt_arg['-t']
 
+            # get output directory for results
+            if '-o' in opt_arg.keys():
+                dir_loc = opt_arg['-o']
+                if not dir_loc.endswith('/'):
+                    dir_loc += '/'
+
             if not '-g' in opt_arg.keys():
                 print('unspecified GAN type, use MLE training only...')
-                gan = set_gan('mle', training)
+                gan = set_gan('mle', training, dir_loc)
             else:
-                gan = set_gan(opt_arg['-g'], training)
+                gan = set_gan(opt_arg['-g'], training, dir_loc)
 
             if not '-t' in opt_arg.keys():
                 gan.train_oracle()
@@ -182,5 +191,6 @@ if __name__ == '__main__':
     flags.DEFINE_string('g', "", 'Default g')
     flags.DEFINE_string('t', "", 'Default t')
     flags.DEFINE_string('d', "", 'Default d')
+    flags.DEFINE_string('o', "", 'Default o')
     # parse the command
     parse_cmd(sys.argv[1:])

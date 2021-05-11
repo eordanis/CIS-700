@@ -3,15 +3,18 @@ from IPython.display import display_html
 import matplotlib.pyplot as plt
 import os
 
-directory = '/content/CIS-700/results' # update as needed
 experiment_pref = 'experiment-log-'
 test_file_pref = 'test_file_'
 csv_ext = '.csv'
 txt_ext = '.txt'
 
 
-def display_synth_data():
+def display_synth_data(directory=None):
     container = ''
+
+    if directory is None:
+        directory = '/content/CIS-700/results'
+
     for filename in os.listdir(directory):
         if filename.startswith(test_file_pref) and filename.endswith(txt_ext):
             fn_split = filename.split(test_file_pref)[1].split(txt_ext)[0].split('_')
@@ -32,9 +35,13 @@ def display_synth_data():
         display_html(container, raw=True)
 
 
-def display_metrics():
+def display_metrics(directory=None):
     df_list = []
     labels = []
+
+    if directory is None:
+        directory = '/content/CIS-700/results'
+
     for filename in os.listdir(directory):
         if filename.startswith(experiment_pref) and filename.endswith(csv_ext):
             fn_split = filename.split(experiment_pref)[1].split(csv_ext)[0].split('-')
