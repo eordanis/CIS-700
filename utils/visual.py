@@ -61,13 +61,13 @@ def display_metrics(directory=None):
     oracle_tg = pd.read_csv(directory + 'experiment-log-textgan-oracle.csv').iloc[:, : 4]
     oracle_cg = pd.read_csv(directory + 'experiment-log-cgan-oracle.csv').iloc[:, : 4]
     oracle_ig = pd.read_csv (directory + 'experiment-log-infogan-oracle.csv').iloc[:, : 4]
-    #oracle_dg = pd.read_csv (directory + 'experiment-log-dcgan-oracle.csv').iloc[:, : 4]
+    oracle_dg = pd.read_csv (directory + 'experiment-log-dcgan-oracle.csv').iloc[:, : 4]
 
     real_sg = pd.read_csv(directory + 'experiment-log-seqgan-real.csv').iloc[:, : 3]
     real_tg = pd.read_csv(directory + 'experiment-log-textgan-real.csv').iloc[:, : 3]
     real_cg = pd.read_csv(directory + 'experiment-log-cgan-real.csv').iloc[:, : 3]
     real_ig = pd.read_csv (directory + 'experiment-log-infogan-real.csv').iloc[:, : 3]
-    # real_dg = pd.read_csv (directory + 'experiment-log-dcgan-real.csv').iloc[:, : 3]
+    real_dg = pd.read_csv (directory + 'experiment-log-dcgan-real.csv').iloc[:, : 3]
 
     # Create new dataframe to represent Oracle EmbeddingSimilarity across all models
     oracle_embed = pd.DataFrame({'Epochs': [1, 6, 10],
@@ -75,7 +75,7 @@ def display_metrics(directory=None):
                                  'TextGan': oracle_tg['EmbeddingSimilarity'],
                                  'CGan': oracle_cg['EmbeddingSimilarity'],
                                  'InfoGan': oracle_ig['EmbeddingSimilarity'],
-                                 # 'DCGAN': oracle_dg['EmbeddingSimilarity'],
+                                 'DCGAN': oracle_dg['EmbeddingSimilarity'],
                                  })
 
     # Create new dataframe to represent Oracle nll-oracle across all models
@@ -84,7 +84,7 @@ def display_metrics(directory=None):
                                    'TextGan': oracle_tg['nll-oracle'],
                                    'CGan': oracle_cg['nll-oracle'],
                                    'InfoGan': oracle_ig['nll-oracle'],
-                                   # 'DCGAN': oracle_dg['nll-oracle'],
+                                   'DCGAN': oracle_dg['nll-oracle'],
                                    })
 
     # Create new dataframe to represent Oracle nll-test across all models
@@ -93,7 +93,7 @@ def display_metrics(directory=None):
                                     'TextGan': oracle_tg['nll-test'],
                                     'CGan': oracle_cg['nll-test'],
                                     'InfoGan': oracle_ig['nll-test'],
-                                    # 'DCGAN': oracle_dg['nll-test'],
+                                    'DCGAN': oracle_dg['nll-test'],
                                     })
 
     # Create new dataframe to represent Real EmbeddingSimilarity across all models
@@ -102,7 +102,7 @@ def display_metrics(directory=None):
                                'TextGan': real_tg['EmbeddingSimilarity'],
                                'CGan': real_cg['EmbeddingSimilarity'],
                                'InfoGan': real_ig['EmbeddingSimilarity'],
-                               # 'LSGAN': real_lg['EmbeddingSimilarity'],
+                               'LSGAN': real_lg['EmbeddingSimilarity'],
                                })
 
     # Create new dataframe to represent Real nll-test across all models
@@ -111,7 +111,7 @@ def display_metrics(directory=None):
                                   'TextGan': real_tg['nll-test'],
                                   'CGan': real_cg['nll-test'],
                                   'InfoGan': real_ig['nll-test'],
-                                  # 'DCGAN': real_dg['nll-test'],
+                                  'DCGAN': real_dg['nll-test'],
                                   })
 
     # define number of rows and columns for subplots
