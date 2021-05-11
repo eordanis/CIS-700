@@ -21,7 +21,7 @@ def display_synth_data(directory=None):
             if len(fn_split) == 2:
                 model = fn_split[0]
                 training = fn_split[1]
-                df = pd.read_csv('results/' + filename, sep="\n", header=None)
+                df = pd.read_csv(directory + filename, sep="\n", header=None)
                 df.columns = [model + " " + training + " Synth Data"]
                 df_styler = df.head(5).style.set_table_attributes("style='display:inline'")
                 if container != '':
@@ -29,7 +29,7 @@ def display_synth_data(directory=None):
                 container += df_styler._repr_html_()
 
     if container != '':
-        file = open("results/real_synth_data.html", "w")
+        file = open(directory + "real_synth_data.html", "w")
         file.write(container)
         file.close()
         display_html(container, raw=True)
@@ -52,22 +52,22 @@ def display_metrics(directory=None):
                 if training == 'real':
                     idx = 3
                 #in progress
-                df = pd.read_csv('results/' + filename, sep="\n", header=None)  # .iloc[:, :idx]
+                df = pd.read_csv(directory + filename, sep="\n", header=None)  # .iloc[:, :idx]
                 df_list.append(df)
                 labels.append(model)
 
     # prep the metric dataframes
-    oracle_sg = pd.read_csv('results/experiment-log-seqgan.csv').iloc[:, : 4]
-    oracle_tg = pd.read_csv('results/experiment-log-textgan.csv').iloc[:, : 4]
-    oracle_cg = pd.read_csv('results/experiment-log-cgan.csv').iloc[:, : 4]
-    oracle_ig = pd.read_csv ('results/experiment-log-infogan.csv').iloc[:, : 4]
-    #oracle_dg = pd.read_csv ('results/experiment-log-dcgan.csv').iloc[:, : 4]
+    oracle_sg = pd.read_csv(directory + 'experiment-log-seqgan-oracle.csv').iloc[:, : 4]
+    oracle_tg = pd.read_csv(directory + 'experiment-log-textgan-oracle.csv').iloc[:, : 4]
+    oracle_cg = pd.read_csv(directory + 'experiment-log-cgan-oracle.csv').iloc[:, : 4]
+    oracle_ig = pd.read_csv (directory + 'experiment-log-infogan-oracle.csv').iloc[:, : 4]
+    #oracle_dg = pd.read_csv (directory + 'experiment-log-dcgan-oracle.csv').iloc[:, : 4]
 
-    real_sg = pd.read_csv('results/experiment-log-seqgan-real.csv').iloc[:, : 3]
-    real_tg = pd.read_csv('results/experiment-log-textgan-real.csv').iloc[:, : 3]
-    real_cg = pd.read_csv('results/experiment-log-cgan-real.csv').iloc[:, : 3]
-    real_ig = pd.read_csv ('results/experiment-log-infogan-real.csv').iloc[:, : 3]
-    # real_dg = pd.read_csv ('results/experiment-log-dcgan-real.csv').iloc[:, : 3]
+    real_sg = pd.read_csv(directory + 'experiment-log-seqgan-real.csv').iloc[:, : 3]
+    real_tg = pd.read_csv(directory + 'experiment-log-textgan-real.csv').iloc[:, : 3]
+    real_cg = pd.read_csv(directory + 'experiment-log-cgan-real.csv').iloc[:, : 3]
+    real_ig = pd.read_csv (directory + 'experiment-log-infogan-real.csv').iloc[:, : 3]
+    # real_dg = pd.read_csv (directory + 'experiment-log-dcgan-real.csv').iloc[:, : 3]
 
     # Create new dataframe to represent Oracle EmbeddingSimilarity across all models
     oracle_embed = pd.DataFrame({'Epochs': [1, 6, 10],
@@ -133,5 +133,5 @@ def display_metrics(directory=None):
                                     title=df_title_list[count], figsize=(20, 10))
                 count += 1
     # save metrics to .png for later use in pdf report
-    plt.savefig('results/model_metric_charts.png')
+    plt.savefig(directory + 'model_metric_charts.png')
 

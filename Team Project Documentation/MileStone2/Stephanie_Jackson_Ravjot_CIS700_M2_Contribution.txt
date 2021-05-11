@@ -4,8 +4,8 @@ Stephanie:
 			2. Restructured report for use with M2
 			3. Added cGan model to code as per M2 requirement and discussed it
 			4. Added new components to use more visual comparisons using csv data generation from trainings
-				a. added utils for visuals with metric charts for test model metrics pulled from generated csvs
-				    1. location: utis/visual.py
+				a. added utils for visuals with metric charts for test model metrics pulled from generated csv
+				    1. location: utils/visual.py
                 b. cleaned up code and took test text files for synthetic data generated and put into dataframes for a more visual experience
             5. Generic code cleanup in files, removed residual hard coded epoch setters so that all files make use of main GAN setter
 
