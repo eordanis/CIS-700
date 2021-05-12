@@ -55,7 +55,7 @@ class Gan:
         scores = list()
         scores.append(self.epoch)
         for metric in self.metrics:
-            print(metric.get_name())
+            #print(metric.get_name())
             tic = time()
             score = metric.get_score()
             log += metric.get_name() + ":" + str(score) + '\t'

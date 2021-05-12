@@ -120,6 +120,9 @@ class Leakgan(Gan):
         docsim = DocEmbSim(oracle_file=self.oracle_file, generator_file=self.generator_file, num_vocabulary=self.vocab_size)
         self.add_metric(docsim)
 
+        print("Metrics Applied: " + nll.get_name() + ", " + inll.get_name() + ", " + docsim.get_name())
+
+
     def train_discriminator(self):
         generate_samples_gen(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.dis_data_loader.load_train_data(self.oracle_file, self.generator_file)
@@ -258,6 +261,8 @@ class Leakgan(Gan):
         from utils.metrics.Cfg import Cfg
         cfg = Cfg(test_file=self.test_file, cfg_grammar=grammar)
         self.add_metric(cfg)
+        print("Metrics Applied: " + cfg.get_name())
+
 
     def train_cfg(self):
         import json
@@ -391,6 +396,9 @@ class Leakgan(Gan):
         inll = Nll(data_loader=self.gen_data_loader, rnn=self.generator, sess=self.sess)
         inll.set_name('nll-test')
         self.add_metric(inll)
+
+        print("Metrics Applied: " + inll.get_name() + ", " + docsim.get_name())
+
 
     def train_real(self, data_loc=None):
         from utils.text_process import code_to_text
