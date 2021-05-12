@@ -80,15 +80,14 @@ def set_training(gan, training_method):
 
 def parse_cmd(argv):
     try:
-        dir_loc = 'results/'
-        epoch = 5;
         argvals = ' '.join(argv)
         if argvals == '':
             print(beginMsg)
             gan = None
             # add all trainings to array
             trainings = ["oracle", "cfg", "real"]
-
+            dir_loc = 'results/'
+            epoch = 5;
             opt_arg = {}
             key = "-g"
             # check if key is already present in dict
@@ -158,37 +157,67 @@ def parse_cmd(argv):
                 print('       python main.py -g <gan_type> -t realdata -d <your_data_location> -o <output_dir_for_results> -p <epoch_num>')
 
                 sys.exit(0)
-            training = 'oracle'
+            
+            training = None
             if '-t' in opt_arg.keys():
                 training = opt_arg['-t']
+            else:
+                print('Unspecified Training Type: Defaulting to Oracle')
+                training = 'oracle'
 
+            dir_loc = None
             # get output directory for results if specified
             if '-o' in opt_arg.keys():
                 dir_loc = opt_arg['-o']
                 if not dir_loc.endswith('/'):
                     dir_loc += '/'
+            else:
+                print('Unspecified Output Director Location: Defaulting to --> results/')
+                dir_loc = 'results/'
 
+            epoch = None
             # get epoch value to use if specified
             if '-p' in opt_arg.keys():
                 temp = opt_arg['-p']
                 if(temp.isdigit()):
                     epoch = int(temp)
-
-            if not '-g' in opt_arg.keys():
-                print('unspecified GAN type, use MLE training only...')
-                gan = set_gan('mle', training, dir_loc, epoch)
+                else:
+                    print('Invalid Epoch Argument Passed: Defaulting Epoch to 5')
+                    epoch = 5;
             else:
-                gan = set_gan(opt_arg['-g'], training, dir_loc, epoch)
+                print('Unspecified Epoch Setting: Defaulting Epoch to 5')
+                epoch = 5;
 
-            print('Results output directory location set: ' + dir_loc)
-            print('Epochs Set: ' + str(epoch))
+            model = None
+            if not '-g' in opt_arg.keys():
+                print('Unspecified GAN Type: Defaulting to MLE Model')
+                model = 'mle'
+            else:
+                model = opt_arg['-g']
+                
+            gan = set_gan(model, training, dir_loc, epoch)
+            
+            data_loc = None
+            if '-d' in opt_arg.keys():
+                data_loc = opt_arg['-d']
+            else:
+                print('Unspecified Data Set: Defaulting to image_coco')
+                data_loc = 'data/image_coco.txt'
 
+            print('\n    <--        Metrics Set           -->')
+            print('Model Set:                    '  + model.capitalize())
+            print('Training Set:                 ' + training.capitalize())
+            print('Data Set:                     ' + data_loc)
+            print('Epochs Set:                   ' + str(epoch))
+            print('Results Output Directory Set: ' + dir_loc)
+            print('    <--          End Details             -->\n')
+            sys.exit(-1)
             if not '-t' in opt_arg.keys():
                 gan.train_oracle()
             else:
-                gan_func = set_training(gan, opt_arg['-t'])
-                if opt_arg['-t'] == 'real' and '-d' in opt_arg.keys():
-                    gan_func(opt_arg['-d'])
+                gan_func = set_training(gan, training)
+                if training == 'real' and '-d' in opt_arg.keys():
+                    gan_func(data_loc)
                 else:
                     gan_func()
 
