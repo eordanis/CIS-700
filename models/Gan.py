@@ -52,6 +52,8 @@ class Gan:
     def evaluate(self):
         from time import time
         log = "epoch:" + str(self.epoch) + '\t'
+        if self.epoch < 10:
+            log+= '\t'
         scores = list()
         scores.append(self.epoch)
         for metric in self.metrics:

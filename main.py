@@ -67,8 +67,6 @@ def set_gan(gan_name, training, dir_loc, epoch):
 
 
 def set_training(gan, training_method):
-    print("set training")
-    print(training_method)
     try:
         if training_method == 'oracle':
             gan_func = gan.train_oracle
