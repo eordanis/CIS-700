@@ -211,7 +211,7 @@ def parse_cmd(argv):
             print('Epochs Set:                   ' + str(epoch))
             print('Results Output Directory Set: ' + dir_loc)
             print('    <--          End Details             -->\n')
-            sys.exit(-1)
+
             if not '-t' in opt_arg.keys():
                 gan.train_oracle()
             else:
