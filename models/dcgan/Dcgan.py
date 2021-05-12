@@ -55,7 +55,6 @@ class Dcgan(Gan):
                 self.discriminator.input_y: y_batch,
             }
             loss,_ = self.sess.run([self.discriminator.d_loss, self.discriminator.train_op], feed)
-            #print(loss)
 
     def evaluate(self):
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
@@ -231,7 +230,6 @@ class Dcgan(Gan):
                     self.generator.rewards: rewards
                 }
                 loss, _ = self.sess.run([self.generator.g_loss, self.generator.g_updates], feed_dict=feed)
-                print(loss)
             end = time()
             self.add_epoch()
             if epoch % 5 == 0 or epoch == self.adversarial_epoch_num - 1:
@@ -250,6 +248,7 @@ class Dcgan(Gan):
         if data_loc is None:
             data_loc = 'data/image_coco.txt'
         self.sequence_length, self.vocab_size = text_precess(data_loc)
+        self.sequence_length = 20
         generator = Generator(num_vocabulary=self.vocab_size, batch_size=self.batch_size, emb_dim=self.emb_dim,
                               hidden_dim=self.hidden_dim, sequence_length=self.sequence_length,
                               start_token=self.start_token)
@@ -329,7 +328,6 @@ class Dcgan(Gan):
                     self.generator.rewards: rewards
                 }
                 loss, _ = self.sess.run([self.generator.g_loss, self.generator.g_updates], feed_dict=feed)
-                print(loss)
             end = time()
             self.add_epoch()
             if epoch % 5 == 0 or epoch == self.adversarial_epoch_num - 1:
