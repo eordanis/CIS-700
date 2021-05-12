@@ -2,6 +2,7 @@ import pandas as pd
 from IPython.display import display_html
 import matplotlib.pyplot as plt
 import os
+import math
 
 experiment_pref = 'experiment-log-'
 test_file_pref = 'test_file_'
