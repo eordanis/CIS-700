@@ -148,7 +148,7 @@ def parse_cmd(argv):
         else:
             print(beginMsg)
             gan = None
-            opts, args = getopt.getopt(argv, "hg:t:d:o:p")
+            opts, args = getopt.getopt(argv, "hg:t:d:o:p:")
             opt_arg = dict(opts)
             if '-h' in opt_arg.keys():
                 print('usage: python main.py -g <gan_type>')
