@@ -31,7 +31,7 @@ def get_updated_file_name(dir_loc, file_name, gan_name, training, ext, sep):
     return dir_loc + file_name + sep + gan_name + sep + training + ext
 
 
-def set_gan(gan_name, training, dir_loc):
+def set_gan(gan_name, training, dir_loc, epoch):
     gans = dict()
     gans['seqgan'] = Seqgan
     gans['gsgan'] = Gsgan
@@ -51,6 +51,8 @@ def set_gan(gan_name, training, dir_loc):
         gan.generator_file = get_updated_file_name(dir_loc, 'generator', gan_name, training, '.txt', '_')
         gan.test_file = get_updated_file_name(dir_loc, 'test_file', gan_name, training, '.txt', '_')
         gan.log_file = get_updated_file_name(dir_loc, 'experiment-log', gan_name, training, '.csv', '-')
+        gan.pre_epoch_num = epoch
+        gan.adversarial_epoch_num = epoch
         return gan
     except KeyError:
         print(Fore.RED + 'Unsupported GAN type: ' + gan_name + Fore.RESET)
@@ -79,6 +81,7 @@ def set_training(gan, training_method):
 def parse_cmd(argv):
     try:
         dir_loc = 'results/'
+        epoch = 5;
         argvals = ' '.join(argv)
         if argvals == '':
             print(beginMsg)
@@ -104,8 +107,9 @@ def parse_cmd(argv):
             opt_arg["-g"].append('dcgan')
             opt_arg["-g"].append('infogan')
 
-            print('Results output directory location: ')
-            print(dir_loc)
+            print('Results output directory location set: ' + dir_loc)
+            print('Epochs Set: ' + str(epoch))
+
             for training in trainings:
                 print("try with training.." + training)
                 for value in opt_arg.values():
@@ -113,7 +117,7 @@ def parse_cmd(argv):
                         try:
                             print("training GAN..." + ganName)
                             try:
-                                gan = set_gan(ganName, training, dir_loc)
+                                gan = set_gan(ganName, training, dir_loc, epoch)
                             except Exception as e:
                                 print("setGan exception")
                                 print(e)
@@ -144,32 +148,40 @@ def parse_cmd(argv):
         else:
             print(beginMsg)
             gan = None
-            opts, args = getopt.getopt(argv, "hg:t:d:o:")
+            opts, args = getopt.getopt(argv, "hg:t:d:o:p")
             opt_arg = dict(opts)
             if '-h' in opt_arg.keys():
                 print('usage: python main.py -g <gan_type>')
                 print('       python main.py -g <gan_type> -t <train_type>')
                 print('       python main.py -g <gan_type> -t realdata -d <your_data_location>')
                 print('       python main.py -g <gan_type> -t realdata -d <your_data_location> -o <output_dir_for_results>')
+                print('       python main.py -g <gan_type> -t realdata -d <your_data_location> -o <output_dir_for_results> -p <epoch_num>')
+
                 sys.exit(0)
             training = 'oracle'
             if '-t' in opt_arg.keys():
                 training = opt_arg['-t']
 
-            # get output directory for results
+            # get output directory for results if specified
             if '-o' in opt_arg.keys():
                 dir_loc = opt_arg['-o']
                 if not dir_loc.endswith('/'):
                     dir_loc += '/'
 
+            # get epoch value to use if specified
+            if '-p' in opt_arg.keys():
+                temp = opt_arg['-p']
+                if(temp.isdigit()):
+                    epoch = int(temp)
+
             if not '-g' in opt_arg.keys():
                 print('unspecified GAN type, use MLE training only...')
-                gan = set_gan('mle', training, dir_loc)
+                gan = set_gan('mle', training, dir_loc, epoch)
             else:
-                gan = set_gan(opt_arg['-g'], training, dir_loc)
+                gan = set_gan(opt_arg['-g'], training, dir_loc, epoch)
 
-            print('Results output directory location: ')
-            print(dir_loc)
+            print('Results output directory location set: ' + dir_loc)
+            print('Epochs Set: ' + str(epoch))
 
             if not '-t' in opt_arg.keys():
                 gan.train_oracle()
@@ -197,5 +209,6 @@ if __name__ == '__main__':
     flags.DEFINE_string('t', "", 'Default t')
     flags.DEFINE_string('d', "", 'Default d')
     flags.DEFINE_string('o', "", 'Default o')
+    flags.DEFINE_string('p', "", 'Default p')
     # parse the command
     parse_cmd(sys.argv[1:])

@@ -14,8 +14,6 @@ class Gan:
         self.sess = init_sess()
         self.metrics = list()
         self.epoch = 0
-        self.pre_epoch_num = 5
-        self.adversarial_epoch_num = 5
         self.log = None
         self.reward = None
         self.oracle_file = None
