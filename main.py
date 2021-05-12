@@ -1,30 +1,34 @@
 import getopt
 import sys
-
+import time
+import datetime
 from colorama import Fore
-import warnings
 
+import warnings
 warnings.filterwarnings('ignore')
 import os
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 import tensorflow.python.util.deprecation as deprecation
-
 deprecation._PRINT_DEPRECATION_WARNINGS = False
 import tensorflow as tf
-from models.gsgan.Gsgan import Gsgan
-from models.leakgan.Leakgan import Leakgan
-from models.maligan_basic.Maligan import Maligan
+
 from models.cgan.Cgan import Cgan
 from models.dcgan.Dcgan import Dcgan
+from models.gsgan.Gsgan import Gsgan
+from models.infogan.Infogan import Infogan
+from models.leakgan.Leakgan import Leakgan
+from models.maligan_basic.Maligan import Maligan
+from models.mle.Mle import Mle
+from models.pg_bleu.Pgbleu import Pgbleu
 from models.rankgan.Rankgan import Rankgan
 from models.seqgan.Seqgan import Seqgan
 from models.textGan_MMD.Textgan import TextganMmd
-from models.infogan.Infogan import Infogan
+
 
 separatorStr = "\n***************************************************************\n"
 beginMsg = "******** Beginning Training ********"
-completeMsg = "******** Completed Training ********\n"
+completeMsg = "\n******** Completed Training ********\n"
 
 
 def get_updated_file_name(dir_loc, file_name, gan_name, training, ext, sep):
@@ -33,15 +37,18 @@ def get_updated_file_name(dir_loc, file_name, gan_name, training, ext, sep):
 
 def set_gan(gan_name, training, dir_loc, epoch):
     gans = dict()
-    gans['seqgan'] = Seqgan
-    gans['gsgan'] = Gsgan
-    gans['textgan'] = TextganMmd
-    gans['leakgan'] = Leakgan
-    gans['rankgan'] = Rankgan
-    gans['maligan'] = Maligan
     gans['cgan'] = Cgan
     gans['dcgan'] = Dcgan
+    gans['gsgan'] = Gsgan
     gans['infogan'] = Infogan
+    gans['leakgan'] = Leakgan
+    gans['maligan'] = Maligan
+    gans['mle'] = Mle
+    gans['pgblue'] = Pgbleu
+    gans['rankgan'] = Rankgan
+    gans['seqgan'] = Seqgan
+    gans['textgan'] = TextganMmd
+
     try:
         Gan = gans[gan_name.lower()]
         gan = Gan()
@@ -82,11 +89,14 @@ def parse_cmd(argv):
     try:
         argvals = ' '.join(argv)
         if argvals == '':
-            print(beginMsg)
+            
             gan = None
             # add all trainings to array
             trainings = ["oracle", "cfg", "real"]
+            models = ["cgan", "dcgan", "gsgan", "infogan", "leakgan", 
+              "maligan", "mle", "pgblue", "rankgan", "seqgan", "textgan"]
             dir_loc = 'results/'
+            data_loc = 'data/image_coco.txt'
             epoch = 5;
             opt_arg = {}
             key = "-g"
@@ -95,57 +105,64 @@ def parse_cmd(argv):
                 opt_arg[key] = []
 
             # add all modes to -g flag
-            opt_arg["-g"].append('seqgan')
-            opt_arg["-g"].append('rankgan')
-            opt_arg["-g"].append('mle')
-            opt_arg["-g"].append('maligan')
-            opt_arg["-g"].append('leakgan')
-            opt_arg["-g"].append('textgan')
-            opt_arg["-g"].append('gsgan')
             opt_arg["-g"].append('cgan')
             opt_arg["-g"].append('dcgan')
+            opt_arg["-g"].append('gsgan')
             opt_arg["-g"].append('infogan')
+            opt_arg["-g"].append('leakgan')
+            opt_arg["-g"].append('maligan')
+            opt_arg["-g"].append('mle')
+            opt_arg["-g"].append('pgblue')
+            opt_arg["-g"].append('rankgan')
+            opt_arg["-g"].append('seqgan')
+            opt_arg["-g"].append('textgan')
 
-            print('Results output directory location set: ' + dir_loc)
-            print('Epochs Set: ' + str(epoch))
-
+            print(separatorStr)
+            print('Running Models:                    '  + ', '.join(models))
+            print('Running Trainings:                 ' + ', '.join(trainings))
+            print('Data Set:                     ' + data_loc)
+            print('Epochs Set:                   ' + str(epoch))
+            print('Results Output Directory Set: ' + dir_loc)
+            print(separatorStr)
+            
+            print('Recording Time Elapse...\n')
+            start = time.time()
+            print(beginMsg)
             for training in trainings:
-                print("try with training.." + training)
                 for value in opt_arg.values():
                     for ganName in value:
                         try:
-                            print("training GAN..." + ganName)
+                            print(training.capitalize() + " Training On " + ganName.capitalize())
                             try:
                                 gan = set_gan(ganName, training, dir_loc, epoch)
                             except Exception as e:
-                                print("setGan exception")
+                                print("SetGan exception")
                                 print(e)
-                            print("start training GAN..." + ganName)
                             try:
                                 gan.train_oracle()
                             except Exception as e:
                                 print("Training exception")
                                 print(e)
-                            print("GAN function")
                             try:
                                 gan_func = set_training(gan, training)
                             except Exception as e:
                                 print("Gan Function exception1")
                                 print(e)
-                            print("Run")
                             try:
                                 gan_func()
                             except Exception as e:
                                 print("Gan Function exception2")
                                 print(e)
-
                         except Exception as e:
                             print("Main exception1")
                             print(e)
                         print(separatorStr)
+
             print(completeMsg)
+            print('Time Elapsed: ' + str(datetime.timedelta(time.time() - start, 2)) + '\n')
+
         else:
-            print(beginMsg)
+            
             gan = None
             opts, args = getopt.getopt(argv, "hg:t:d:o:p:")
             opt_arg = dict(opts)
@@ -155,7 +172,6 @@ def parse_cmd(argv):
                 print('       python main.py -g <gan_type> -t realdata -d <your_data_location>')
                 print('       python main.py -g <gan_type> -t realdata -d <your_data_location> -o <output_dir_for_results>')
                 print('       python main.py -g <gan_type> -t realdata -d <your_data_location> -o <output_dir_for_results> -p <epoch_num>')
-
                 sys.exit(0)
             
             training = None
@@ -203,15 +219,18 @@ def parse_cmd(argv):
             else:
                 print('Unspecified Data Set: Defaulting to image_coco')
                 data_loc = 'data/image_coco.txt'
-
-            print('\n    <--        Metrics Set           -->')
+            
+            print(separatorStr)
             print('Model Set:                    '  + model.capitalize())
             print('Training Set:                 ' + training.capitalize())
             print('Data Set:                     ' + data_loc)
             print('Epochs Set:                   ' + str(epoch))
             print('Results Output Directory Set: ' + dir_loc)
-            print('    <--          End Details             -->\n')
+            print(separatorStr)
+            print('Recording Time Elapse...\n')
+            start = time.time()
 
+            print(beginMsg)
             if not '-t' in opt_arg.keys():
                 gan.train_oracle()
             else:
@@ -220,9 +239,9 @@ def parse_cmd(argv):
                     gan_func(data_loc)
                 else:
                     gan_func()
-
+            
             print(completeMsg)
-
+            print('Time Elapsed: ' + str(datetime.timedelta(time.time() - start, 2)) + '\n')
     except getopt.GetoptError:
         print('invalid arguments!')
         print('`python main.py -h`  for help')
