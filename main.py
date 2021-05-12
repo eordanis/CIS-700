@@ -104,6 +104,8 @@ def parse_cmd(argv):
             opt_arg["-g"].append('dcgan')
             opt_arg["-g"].append('infogan')
 
+            print('Results output directory location: ')
+            print(dir_loc)
             for training in trainings:
                 print("try with training.." + training)
                 for value in opt_arg.values():
@@ -165,6 +167,9 @@ def parse_cmd(argv):
                 gan = set_gan('mle', training, dir_loc)
             else:
                 gan = set_gan(opt_arg['-g'], training, dir_loc)
+
+            print('Results output directory location: ')
+            print(dir_loc)
 
             if not '-t' in opt_arg.keys():
                 gan.train_oracle()
