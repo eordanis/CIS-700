@@ -59,11 +59,9 @@ class Discriminator(object):
             self, sequence_length, num_classes, vocab_size,
             emd_dim, filter_sizes, num_filters, l2_reg_lambda=0.0, dropout_keep_prob = 1):
         # Placeholders for input, output and dropout
-        # sequence_length = 20
         self.input_x = tf.compat.v1.placeholder(tf.compat.v1.int32, [None, sequence_length], name="input_x")
         self.input_y = tf.compat.v1.placeholder(tf.compat.v1.float32, [None, num_classes], name="input_y")
         self.dropout_keep_prob = dropout_keep_prob
-        # self.dropout_keep_prob = tf.compat.v1.placeholder(tf.compat.v1.float32, name="dropout_keep_prob")
 
         # Keeping track of l2 regularization loss (optional)
         l2_loss = tf.compat.v1.constant(0.0)
@@ -85,10 +83,7 @@ class Discriminator(object):
             pooled_outputs = []
             for filter_size, num_filter in zip(filter_sizes, num_filters):
                 with tf.compat.v1.name_scope("conv-maxpool-%s" % filter_size):
-                    print(sequence_length)
-                    print(filter_size)
                     # Convolution Layer
-                    print(num_filter)
                     filter_shape = [filter_size, emd_dim, 1, num_filter]
                     W = tf.compat.v1.Variable(tf.compat.v1.truncated_normal(filter_shape, stddev=0.1), name="W")
                     b = tf.compat.v1.Variable(tf.compat.v1.constant(0.1, shape=[num_filter]), name="b")
@@ -101,21 +96,17 @@ class Discriminator(object):
 
                     # 1st hidden layer
                     conv1 = tf.compat.v1.layers.conv2d(conv, 128, [5, 5], strides=(2, 2), padding='same', kernel_initializer=w_init, bias_initializer=b_init)
-                    lrelu1 = tf.nn.leaky_relu(conv1, 0.2)
+                    lrelu1 = tf.nn.leaky_relu(conv1, 0.35)
 
                     # 2nd hidden layer
                     conv2 = tf.compat.v1.layers.conv2d(lrelu1, num_filter, [5, 5], strides=(2, 2), padding='same', kernel_initializer=w_init, bias_initializer=b_init)
-                    # lrelu2 = tf.nn.leaky_relu(tf.compat.v1.layers.batch_normalization(conv2, training=False), 0.2)
 
                     # output layer
                     o = tf.nn.sigmoid(conv2)
 
-                    # Apply nonlinearity
-                    h = tf.compat.v1.nn.relu(tf.compat.v1.nn.bias_add(o, b), name="relu")
                     # Maxpooling over the outputs
                     pooled = tf.compat.v1.nn.max_pool(
-                        h,
-                        # ksize=[1, sequence_length - filter_size + 1, 1, 1],
+                        o,
                         ksize=[1, 5, 1, 1],
                         strides=[1, 1, 1, 1],
                         padding='VALID',
@@ -124,7 +115,6 @@ class Discriminator(object):
 
             # Combine all the pooled features
             num_filters_total = sum(num_filters)
-            print(pooled_outputs)
             self.h_pool = tf.compat.v1.concat(pooled_outputs, 3)
             self.h_pool_flat = tf.compat.v1.reshape(self.h_pool, [-1, num_filters_total])
 
