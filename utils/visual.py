@@ -129,7 +129,7 @@ def display_metrics(directory=None):
     for r in range(nrow):
         for c in range(ncol):
             if count < 5:
-                df_list[count].plot(ax=axes[r, c], x='Epochs', y=['SeqGan', 'TextGan', 'CGan', 'InfoGan', 'DCGan'], kind='line',
+                df_list[count].plot(ax=axes[r, c], x='Epochs', y=['SeqGan', 'TextGan', 'CGan', 'InfoGan', 'DCGAN'], kind='line',
                                     title=df_title_list[count], figsize=(20, 10))
                 count += 1
     # save metrics to .png for later use in pdf report
