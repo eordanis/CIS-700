@@ -102,7 +102,7 @@ def display_metrics(directory=None):
                                'TextGan': real_tg['EmbeddingSimilarity'],
                                'CGan': real_cg['EmbeddingSimilarity'],
                                'InfoGan': real_ig['EmbeddingSimilarity'],
-                               'LSGAN': real_lg['EmbeddingSimilarity'],
+                               'DCGAN': real_dg['EmbeddingSimilarity'],
                                })
 
     # Create new dataframe to represent Real nll-test across all models
