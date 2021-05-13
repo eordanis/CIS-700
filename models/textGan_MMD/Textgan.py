@@ -150,7 +150,7 @@ class TextganMmd(Gan):
         self.gen_data_loader.create_batches(self.oracle_file)
         self.oracle_data_loader.create_batches(self.generator_file)
 
-        print('pre-training  generator:')
+        print('Pre-training  Generator...')
         for epoch in range(self.pre_epoch_num):
             start = time()
             loss = pre_train_epoch(self.sess, self.generator, self.gen_data_loader)
@@ -160,14 +160,14 @@ class TextganMmd(Gan):
                 generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
                 self.evaluate()
 
-        print('pre-training  discriminator:')
+        print('Pre-training  Discriminator...')
         self.reset_epoch()
         for epoch in range(self.pre_epoch_num):
             self.train_discriminator()
 
         self.reset_epoch()
         del oracle_code
-        print('adversarial training:')
+        print('Adversarial Training...')
         for epoch in range(self.adversarial_epoch_num):
             start = time()
             for index in range(100):
@@ -242,7 +242,7 @@ class TextganMmd(Gan):
                                        self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
         self.oracle_data_loader.create_batches(self.generator_file)
-        print('pre-training  generator:')
+        print('Pre-training  Generator...')
         for epoch in range(self.pre_epoch_num):
             start = time()
             loss = pre_train_epoch(self.sess, self.generator, self.gen_data_loader)
@@ -253,13 +253,13 @@ class TextganMmd(Gan):
                 get_cfg_test_file()
                 self.evaluate()
 
-        print('pre-training  discriminator:')
+        print('Pre-training  Discriminator...')
         self.reset_epoch()
         for epoch in range(self.pre_epoch_num * 3):
             self.train_discriminator()
 
         self.reset_epoch()
-        print('adversarial training:')
+        print('Adversarial Training...')
 
         del oracle_code
         for epoch in range(self.adversarial_epoch_num):
@@ -348,7 +348,7 @@ class TextganMmd(Gan):
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
 
-        print('pre-training  generator:')
+        print('Pre-training  Generator...')
         for epoch in range(self.pre_epoch_num):
             start = time()
             loss = pre_train_epoch(self.sess, self.generator, self.gen_data_loader)
@@ -359,14 +359,14 @@ class TextganMmd(Gan):
                 get_real_test_file()
                 self.evaluate()
 
-        print('pre-training  discriminator:')
+        print('Pre-training  Discriminator...')
         self.reset_epoch()
         for epoch in range(self.pre_epoch_num):
             self.train_discriminator()
         oracle_code = get_real_code()
 
 
-        print('adversarial training:')
+        print('Adversarial Training...')
         for epoch in range(self.adversarial_epoch_num):
             start = time()
             for index in range(100):

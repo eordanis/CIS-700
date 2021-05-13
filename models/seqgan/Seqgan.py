@@ -112,7 +112,7 @@ class Seqgan(Gan):
         self.gen_data_loader.create_batches(self.oracle_file)
         self.oracle_data_loader.create_batches(self.generator_file)
 
-        print('pre-training generator:')
+        print('Pre-training Generator...')
         for epoch in range(self.pre_epoch_num):
             start = time()
             loss = pre_train_epoch(self.sess, self.generator, self.gen_data_loader)
@@ -122,13 +122,13 @@ class Seqgan(Gan):
                 generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
                 self.evaluate()
 
-        print('pre-training discriminator:')
+        print('Pre-training  Discriminator...')
         self.reset_epoch()
         for epoch in range(self.pre_epoch_num):
             self.train_discriminator()
 
         self.reset_epoch()
-        print('adversarial training:')
+        print('Adversarial Training...')
         self.reward = Reward(self.generator, .8)
         for epoch in range(self.adversarial_epoch_num):
             start = time()
@@ -205,7 +205,7 @@ class Seqgan(Gan):
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
         self.oracle_data_loader.create_batches(self.generator_file)
-        print('pre-training generator:')
+        print('Pre-training Generator...')
         for epoch in range(self.pre_epoch_num):
             start = time()
             loss = pre_train_epoch(self.sess, self.generator, self.gen_data_loader)
@@ -216,13 +216,13 @@ class Seqgan(Gan):
                 get_cfg_test_file()
                 self.evaluate()
 
-        print('pre-training discriminator:')
+        print('Pre-training  Discriminator...')
         self.reset_epoch()
         for epoch in range(self.pre_epoch_num * 3):
             self.train_discriminator()
 
         self.reset_epoch()
-        print('adversarial training:')
+        print('Adversarial Training...')
         self.reward = Reward(self.generator, .8)
         for epoch in range(self.adversarial_epoch_num):
             start = time()
@@ -304,7 +304,7 @@ class Seqgan(Gan):
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
 
-        print('pre-training generator:')
+        print('Pre-training Generator...')
         for epoch in range(self.pre_epoch_num):
             start = time()
             loss = pre_train_epoch(self.sess, self.generator, self.gen_data_loader)
@@ -315,13 +315,13 @@ class Seqgan(Gan):
                 get_real_test_file()
                 self.evaluate()
 
-        print('pre-training discriminator:')
+        print('Pre-training  Discriminator...')
         self.reset_epoch()
         for epoch in range(self.pre_epoch_num):
             self.train_discriminator()
 
         self.reset_epoch()
-        print('adversarial training:')
+        print('Adversarial Training...')
         self.reward = Reward(self.generator, .8)
         for epoch in range(self.adversarial_epoch_num):
             start = time()

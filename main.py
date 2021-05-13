@@ -1,7 +1,6 @@
 import getopt
 import sys
 import time
-import datetime
 from colorama import Fore
 
 import warnings
@@ -33,6 +32,20 @@ completeMsg = "\n******** Completed Training ********\n"
 
 def get_updated_file_name(dir_loc, file_name, gan_name, training, ext, sep):
     return dir_loc + file_name + sep + gan_name + sep + training + ext
+
+
+def display_time_elapsed(start):
+    if start > 0 :
+        s = time.time() - start
+        hours, remainder = divmod(s, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        te = 'Time Elapsed: '
+        if(hours > 0):
+            te += '{:02}hrs:'.format(int(hours))
+        if(hours > 0 or minutes > 0):
+            te += '{:02}mins:'.format(int(minutes))
+        te += '{:02}secs\n'.format(int(seconds))
+        print(te)
 
 
 def set_gan(gan_name, training, dir_loc, epoch):
@@ -157,7 +170,7 @@ def parse_cmd(argv):
                         print(separatorStr)
 
             print(completeMsg)
-            print('Time Elapsed: ' + str(datetime.timedelta(seconds=(time.time() - start))) + '\n')
+            display_time_elapsed(start)
 
         else:
             
@@ -239,7 +252,8 @@ def parse_cmd(argv):
                     gan_func()
             
             print(completeMsg)
-            print('Time Elapsed: ' + str(datetime.timedelta(seconds=(time.time() - start))) + '\n')
+            display_time_elapsed(start)
+
     except getopt.GetoptError:
         print('invalid arguments!')
         print('`python main.py -h`  for help')

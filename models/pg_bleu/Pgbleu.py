@@ -104,7 +104,7 @@ class Pgbleu(Gan):
         self.oracle_data_loader.create_batches(self.generator_file)
         self.init_metric()
 
-        print('pre-training  generator:')
+        print('Pre-training  Generator...')
         for epoch in range(self.pre_epoch_num):
             start = time()
             loss = pre_train_epoch(self.sess, self.generator, self.gen_data_loader)

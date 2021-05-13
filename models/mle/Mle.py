@@ -103,7 +103,7 @@ class Mle(Gan):
         self.oracle_data_loader.create_batches(self.generator_file)
         self.init_metric()
 
-        print('pre-training  generator:')
+        print('Pre-training  Generator...')
         for epoch in range(self.pre_epoch_num):
             start = time()
             loss = pre_train_epoch(self.sess, self.generator, self.gen_data_loader)
@@ -156,7 +156,7 @@ class Mle(Gan):
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
 
-        print('pre-training  generator:')
+        print('Pre-training  Generator...')
         for epoch in range(self.pre_epoch_num):
             start = time()
             loss = pre_train_epoch(self.sess, self.generator, self.gen_data_loader)
