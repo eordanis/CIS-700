@@ -112,7 +112,7 @@ class Seqgan(Gan):
         self.gen_data_loader.create_batches(self.oracle_file)
         self.oracle_data_loader.create_batches(self.generator_file)
 
-        print('start pre-train generator:')
+        print('pre-training generator:')
         for epoch in range(self.pre_epoch_num):
             start = time()
             loss = pre_train_epoch(self.sess, self.generator, self.gen_data_loader)
@@ -122,7 +122,7 @@ class Seqgan(Gan):
                 generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
                 self.evaluate()
 
-        print('start pre-train discriminator:')
+        print('pre-training discriminator:')
         self.reset_epoch()
         for epoch in range(self.pre_epoch_num):
             self.train_discriminator()
@@ -205,7 +205,7 @@ class Seqgan(Gan):
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
         self.oracle_data_loader.create_batches(self.generator_file)
-        print('start pre-train generator:')
+        print('pre-training generator:')
         for epoch in range(self.pre_epoch_num):
             start = time()
             loss = pre_train_epoch(self.sess, self.generator, self.gen_data_loader)
@@ -216,7 +216,7 @@ class Seqgan(Gan):
                 get_cfg_test_file()
                 self.evaluate()
 
-        print('start pre-train discriminator:')
+        print('pre-training discriminator:')
         self.reset_epoch()
         for epoch in range(self.pre_epoch_num * 3):
             self.train_discriminator()
@@ -234,7 +234,7 @@ class Seqgan(Gan):
                     self.generator.rewards: rewards
                 }
                 loss, _ = self.sess.run([self.generator.g_loss, self.generator.g_updates], feed_dict=feed)
-                print(loss)
+                #print(loss)
             end = time()
             self.add_epoch()
             if epoch % 5 == 0 or epoch == self.adversarial_epoch_num - 1:
@@ -304,7 +304,7 @@ class Seqgan(Gan):
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
 
-        print('start pre-train generator:')
+        print('pre-training generator:')
         for epoch in range(self.pre_epoch_num):
             start = time()
             loss = pre_train_epoch(self.sess, self.generator, self.gen_data_loader)
@@ -315,7 +315,7 @@ class Seqgan(Gan):
                 get_real_test_file()
                 self.evaluate()
 
-        print('start pre-train discriminator:')
+        print('pre-training discriminator:')
         self.reset_epoch()
         for epoch in range(self.pre_epoch_num):
             self.train_discriminator()
@@ -333,7 +333,7 @@ class Seqgan(Gan):
                     self.generator.rewards: rewards
                 }
                 loss, _ = self.sess.run([self.generator.g_loss, self.generator.g_updates], feed_dict=feed)
-                print(loss)
+                #print(loss)
             end = time()
             self.add_epoch()
             if epoch % 5 == 0 or epoch == self.adversarial_epoch_num - 1:

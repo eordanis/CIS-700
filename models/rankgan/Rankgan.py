@@ -64,6 +64,10 @@ class Rankgan(Gan):
         from utils.metrics.DocEmbSim import DocEmbSim
         docsim = DocEmbSim(oracle_file=self.oracle_file, generator_file=self.generator_file, num_vocabulary=self.vocab_size)
         self.add_metric(docsim)
+        
+        print("Metrics Applied: " + nll.get_name() + ", " + inll.get_name() + ", " + docsim.get_name())
+        
+        
 
     def train_discriminator(self):
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
@@ -79,30 +83,30 @@ class Rankgan(Gan):
             _ = self.sess.run(self.discriminator.train_op, feed)
 
     def evaluate(self):
-        print("evaluate")
+        #print("evaluate")
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         if self.oracle_data_loader is not None:
             self.oracle_data_loader.create_batches(self.generator_file)
         if self.log is not None:
-            print("write to file")
+            #print("write to file")
             if self.epoch == 0 or self.epoch == 1:
                 self.log.write('epochs,')
                 for metric in self.metrics:
-                    print(metric.get_name())
+                    #print(metric.get_name())
                     self.log.write(metric.get_name() + ',')
                 self.log.write('\n')
                 self.log.flush()
                 #self.log.close()
             scores = super().evaluate()
             for score in scores:
-                print("score")
+                #print("score")
                 self.log.write(str(score)+',')
             self.log.write('\n')
             self.log.flush()
             #self.log.close()
             return scores
         #self.log.close()
-        print("end evaluate")
+        #print("end evaluate")
         return super().evaluate()
 
     def train_oracle(self):
@@ -116,7 +120,7 @@ class Rankgan(Gan):
         self.oracle_data_loader.create_batches(self.generator_file)
 
         rollout = Reward(self.generator, .8)
-        print('start pre-train generator:')
+        print('pre-training  generator:')
         for epoch in range(self.pre_epoch_num):
             start = time()
             loss = pre_train_epoch(self.sess, self.generator, self.gen_data_loader)
@@ -125,7 +129,7 @@ class Rankgan(Gan):
             if epoch % 5 == 0:
                 self.evaluate()
 
-        print('start pre-train discriminator:')
+        print('pre-training  discriminator:')
         self.reset_epoch()
         for epoch in range(self.pre_epoch_num):
             self.train_discriminator()
@@ -181,6 +185,8 @@ class Rankgan(Gan):
         from utils.metrics.Cfg import Cfg
         cfg = Cfg(test_file=self.test_file, cfg_grammar=grammar)
         self.add_metric(cfg)
+        print("Metrics Applied: " + cfg.get_name())
+        
 
     def train_cfg(self):
         import json
@@ -212,7 +218,7 @@ class Rankgan(Gan):
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
         self.oracle_data_loader.create_batches(self.generator_file)
-        print('start pre-train generator:')
+        print('pre-training  generator:')
         for epoch in range(self.pre_epoch_num):
             start = time()
             loss = pre_train_epoch(self.sess, self.generator, self.gen_data_loader)
@@ -223,7 +229,7 @@ class Rankgan(Gan):
                 get_cfg_test_file()
                 self.evaluate()
 
-        print('start pre-train discriminator:')
+        print('pre-training  discriminator:')
         self.reset_epoch()
         for epoch in range(self.pre_epoch_num * 3):
             self.train_discriminator()
@@ -290,6 +296,10 @@ class Rankgan(Gan):
         inll = Nll(data_loader=self.gen_data_loader, rnn=self.generator, sess=self.sess)
         inll.set_name('nll-test')
         self.add_metric(inll)
+        
+        print("Metrics Applied: " + inll.get_name() + ", " + docsim.get_name())
+        
+        
 
     def train_real(self, data_loc=None):
         from utils.text_process import code_to_text
@@ -309,7 +319,7 @@ class Rankgan(Gan):
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
 
-        print('start pre-train generator:')
+        print('pre-training  generator:')
         for epoch in range(self.pre_epoch_num):
             start = time()
             loss = pre_train_epoch(self.sess, self.generator, self.gen_data_loader)
@@ -320,7 +330,7 @@ class Rankgan(Gan):
                 get_real_test_file()
                 self.evaluate()
 
-        print('start pre-train discriminator:')
+        print('pre-training  discriminator:')
         self.reset_epoch()
         for epoch in range(self.pre_epoch_num):
             self.train_discriminator()

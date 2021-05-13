@@ -13,7 +13,7 @@ from utils.utils import *
 
 
 def pre_train_epoch_gen(sess, trainable_model, data_loader):
-    # Pre-train the generator using MLE for one epoch
+    # pre-training the generator using MLE for one epoch
     supervised_g_losses = []
     data_loader.reset_pointer()
 
@@ -169,7 +169,7 @@ class Leakgan(Gan):
         for a in range(1):
             g = self.sess.run(self.generator.gen_x, feed_dict={self.generator.drop_out: 1, self.generator.train: 1})
 
-        print('start pre-train generator:')
+        print('pre-training generator:')
         for epoch in range(self.pre_epoch_num):
             start = time()
             loss = pre_train_epoch_gen(self.sess, self.generator, self.gen_data_loader)
@@ -179,7 +179,7 @@ class Leakgan(Gan):
                 generate_samples_gen(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
                 self.evaluate()
 
-        print('start pre-train discriminator:')
+        print('pre-training discriminator:')
         self.reset_epoch()
         for epoch in range(self.pre_epoch_num):
             self.train_discriminator()
@@ -294,7 +294,7 @@ class Leakgan(Gan):
         generate_samples_gen(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
         self.gen_data_loader.create_batches(self.oracle_file)
         self.oracle_data_loader.create_batches(self.generator_file)
-        print('start pre-train generator:')
+        print('pre-training generator:')
         for epoch in range(self.pre_epoch_num):
             start = time()
             loss = pre_train_epoch_gen(self.sess, self.generator, self.gen_data_loader)
@@ -305,7 +305,7 @@ class Leakgan(Gan):
                 get_cfg_test_file()
                 self.evaluate()
 
-        print('start pre-train discriminator:')
+        print('pre-training discriminator:')
         self.reset_epoch()
         for epoch in range(self.pre_epoch_num * 3):
             self.train_discriminator()
@@ -421,7 +421,7 @@ class Leakgan(Gan):
         for a in range(1):
             g = self.sess.run(self.generator.gen_x, feed_dict={self.generator.drop_out: 1, self.generator.train: 1})
 
-        print('start pre-train generator:')
+        print('pre-training generator:')
         for epoch in range(self.pre_epoch_num):
             start = time()
             loss = pre_train_epoch_gen(self.sess, self.generator, self.gen_data_loader)
@@ -432,7 +432,7 @@ class Leakgan(Gan):
                 get_real_test_file()
                 self.evaluate()
 
-        print('start pre-train discriminator:')
+        print('pre-training discriminator:')
         self.reset_epoch()
         for epoch in range(self.pre_epoch_num):
             self.train_discriminator()

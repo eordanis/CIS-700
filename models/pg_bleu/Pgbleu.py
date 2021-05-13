@@ -57,6 +57,10 @@ class Pgbleu(Gan):
         from utils.metrics.DocEmbSim import DocEmbSim
         docsim = DocEmbSim(oracle_file=self.oracle_file, generator_file=self.generator_file, num_vocabulary=self.vocab_size)
         self.add_metric(docsim)
+        
+        print("Metrics Applied: " + nll.get_name() + ", " + inll.get_name() + ", " + docsim.get_name())
+        
+        
 
     def train_discriminator(self):
         generate_samples(self.sess, self.generator, self.batch_size, self.generate_num, self.generator_file)
@@ -100,7 +104,7 @@ class Pgbleu(Gan):
         self.oracle_data_loader.create_batches(self.generator_file)
         self.init_metric()
 
-        print('start pre-train generator:')
+        print('pre-training  generator:')
         for epoch in range(self.pre_epoch_num):
             start = time()
             loss = pre_train_epoch(self.sess, self.generator, self.gen_data_loader)
