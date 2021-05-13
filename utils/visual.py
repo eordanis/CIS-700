@@ -60,9 +60,11 @@ def display_best_values(directory=None):
 
 def display_synth_data(directory=None):
     container = ''
-    real_synth_image_path = directory + "real_synth_data.png"
+    
     if directory is None:
         directory = '/content/CIS-700/results/'
+    
+    real_synth_image_path = directory + "real_synth_data.png"
     
     for filename in os.listdir(directory):
         if filename.startswith(test_file_pref) and filename.endswith(txt_ext):
