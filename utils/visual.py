@@ -1,21 +1,68 @@
 import pandas as pd
-from IPython.display import display_html
+from IPython.display import display_html, Image
+import weasyprint as wsp
 import matplotlib.pyplot as plt
 import os
 import math
 
+real_synth_image_path = directory + "real_synth_data.png"
 experiment_pref = 'experiment-log-'
 test_file_pref = 'test_file_'
 csv_ext = '.csv'
 txt_ext = '.txt'
 
+def display_best_values(directory=None):
+    real_list = []
+    oracle_list = []
+
+    if directory is None:
+        directory = '/content/CIS-700/results/'
+
+    for filename in os.listdir(directory):
+        if filename.startswith(experiment_pref) and filename.endswith(csv_ext):
+            fn_split = filename.split(experiment_pref)[1].split(csv_ext)[0].split('-')
+            if(len(fn_split) == 2):
+                model = fn_split[0]
+                training = fn_split[1]
+                df = pd.read_csv(directory + filename)
+                best_val_metric_msg = model.capitalize() + '\n\t'
+                for col in df:
+                    best_val = ''
+                    if col == 'epochs' or col.startswith('Unnamed'):
+                        continue
+
+                    if col == 'EmbeddingSimilarity':
+                        temp = df.iloc[df[col].argmax()]
+                        best_val = str(round(temp[col], 4))
+                    elif col != 'epochs':
+                        temp = df.iloc[df[col].argmin()]
+                        best_val = str(round(temp[col], 4))
+                    epoch = str(round(temp['epochs']))
+                    if(pd.notna(best_val)):
+                        best_val_metric_msg+= col + ': ' + best_val + ' @epoch ' + epoch +'\t'
+                  
+                if training == 'real':
+                    real_list.append(best_val_metric_msg + '\n')
+                else:
+                    oracle_list.append(best_val_metric_msg + '\n')
+
+    print('********************************')
+    print('\tOracle Training:')
+    print('********************************')
+    print(*sorted(oracle_list), sep = "\n")
+    print('********************************')
+    print('\tReal Training:')
+    print('********************************')
+    print(*sorted(real_list), sep = "\n")
+     
+     
 
 def display_synth_data(directory=None):
     container = ''
 
     if directory is None:
         directory = '/content/CIS-700/results/'
-
+    
     for filename in os.listdir(directory):
         if filename.startswith(test_file_pref) and filename.endswith(txt_ext):
             fn_split = filename.split(test_file_pref)[1].split(txt_ext)[0].split('_')
@@ -23,17 +70,22 @@ def display_synth_data(directory=None):
                 model = fn_split[0]
                 training = fn_split[1]
                 df = pd.read_csv(directory + filename, sep="\n", header=None)
-                df.columns = [model + " " + training + " Synth Data"]
-                df_styler = df.head(5).style.set_table_attributes("style='display:inline'")
+                df.columns = [model.capitalize() + " " + training.capitalize() + " Synth Data"]
+                df_styler = df.head(5)#.style.set_table_attributes("style='display:inline-block'")
                 if container != '':
-                    container += '<hr style="width: 900px; margin-left:0;">'
+                    container += '<hr style="width: 400px; margin-left:0;">'
                 container += df_styler._repr_html_()
 
     if container != '':
+        html = wsp.HTML(string=container)
+        html.write_png(real_synth_image_path)
+        display(Image(filename=real_synth_image_path))
+        '''
         file = open(directory + "real_synth_data.html", "w")
         file.write(container)
         file.close()
         display_html(container, raw=True)
+        '''
 
 
 def display_metrics(directory=None):
