@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import os
 import math
 
-real_synth_image_path = directory + "real_synth_data.png"
+
 experiment_pref = 'experiment-log-'
 test_file_pref = 'test_file_'
 csv_ext = '.csv'
@@ -17,6 +17,8 @@ def display_best_values(directory=None):
 
     if directory is None:
         directory = '/content/CIS-700/results/'
+
+    real_synth_image_path = directory + "real_synth_data.png"
 
     for filename in os.listdir(directory):
         if filename.startswith(experiment_pref) and filename.endswith(csv_ext):
