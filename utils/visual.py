@@ -11,14 +11,13 @@ test_file_pref = 'test_file_'
 csv_ext = '.csv'
 txt_ext = '.txt'
 
+
 def display_best_values(directory=None):
     real_list = []
     oracle_list = []
 
     if directory is None:
         directory = '/content/CIS-700/results/'
-
-    real_synth_image_path = directory + "real_synth_data.png"
 
     for filename in os.listdir(directory):
         if filename.startswith(experiment_pref) and filename.endswith(csv_ext):
@@ -61,7 +60,7 @@ def display_best_values(directory=None):
 
 def display_synth_data(directory=None):
     container = ''
-
+    real_synth_image_path = directory + "real_synth_data.png"
     if directory is None:
         directory = '/content/CIS-700/results/'
     
