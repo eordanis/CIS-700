@@ -157,7 +157,7 @@ def parse_cmd(argv):
                         print(separatorStr)
 
             print(completeMsg)
-            print('Time Elapsed: ' + str(datetime.timedelta(time.time() - start, 2)) + '\n')
+            print('Time Elapsed: ' + str(datetime.timedelta(seconds=(time.time() - start))) + '\n')
 
         else:
             
@@ -239,7 +239,7 @@ def parse_cmd(argv):
                     gan_func()
             
             print(completeMsg)
-            print('Time Elapsed: ' + str(datetime.timedelta(time.time() - start, 2)) + '\n')
+            print('Time Elapsed: ' + str(datetime.timedelta(seconds=(time.time() - start))) + '\n')
     except getopt.GetoptError:
         print('invalid arguments!')
         print('`python main.py -h`  for help')
