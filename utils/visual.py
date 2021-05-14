@@ -69,7 +69,7 @@ def display_synth_data(directory=None, rows=None):
         rows = int(rows)
         
     real_synth_image_path = directory + "real_synth_data.png"
-    real_synth_image_resized_path = directory + "real_synth_data_resized.png"
+    
     for filename in os.listdir(directory):
         if filename.startswith(test_file_pref) and filename.endswith(txt_ext):
             fn_split = filename.split(test_file_pref)[1].split(txt_ext)[0].split('_')
@@ -84,15 +84,9 @@ def display_synth_data(directory=None, rows=None):
                 container += df_styler._repr_html_()
 
     if container != '':
-        basewidth = 300
         html = wsp.HTML(string=container)
-        html.write_png(real_synth_image_path)
-        img = Image(filename=real_synth_image_path)
-        wpercent = (basewidth / float(img.size[0]))
-        hsize = int((float(img.size[1]) * float(wpercent)))
-        img = img.resize((basewidth, hsize), Image.ANTIALIAS)
-        img.save(real_synth_image_resized_path)
-        display(img)
+        html.write_png(real_synth_image_path, optimize_images=False)
+        display(Image(filename=real_synth_image_path))
         '''
         file = open(directory + "real_synth_data.html", "w")
         file.write(container)
