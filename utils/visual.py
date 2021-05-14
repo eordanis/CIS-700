@@ -92,7 +92,7 @@ def display_synth_data(directory=None, rows=None):
         hsize = int((float(img.size[1]) * float(wpercent)))
         img = img.resize((basewidth, hsize), Image.ANTIALIAS)
         img.save(real_synth_image_resized_path)
-        display(img))
+        display(img)
         '''
         file = open(directory + "real_synth_data.html", "w")
         file.write(container)
