@@ -78,7 +78,7 @@ def display_synth_data(directory=None, rows=None):
                 training = fn_split[1]
                 df = pd.read_csv(directory + filename, sep="\n", header=None)
                 df.columns = [model.capitalize() + " " + training.capitalize() + " Synth Data"]
-                df_styler = df.head(rows)#.style.set_table_attributes("style='display:inline-block'")
+                df_styler = df.head(rows).style.set_table_attributes("style='display:inline-block'")
                 if container != '':
                     container += '<hr style="width: 400px; margin-left:0;">'
                 container += df_styler._repr_html_()
