@@ -58,14 +58,18 @@ def display_best_values(directory=None):
      
      
 
-def display_synth_data(directory=None):
+def display_synth_data(directory=None, rows=None):
     container = ''
     
     if directory is None:
         directory = '/content/CIS-700/results/'
-    
+    if rows is None:
+        rows = 5
+    else:
+        rows = int(rows)
+        
     real_synth_image_path = directory + "real_synth_data.png"
-    
+    real_synth_image_resized_path = directory + "real_synth_data_resized.png"
     for filename in os.listdir(directory):
         if filename.startswith(test_file_pref) and filename.endswith(txt_ext):
             fn_split = filename.split(test_file_pref)[1].split(txt_ext)[0].split('_')
@@ -74,15 +78,21 @@ def display_synth_data(directory=None):
                 training = fn_split[1]
                 df = pd.read_csv(directory + filename, sep="\n", header=None)
                 df.columns = [model.capitalize() + " " + training.capitalize() + " Synth Data"]
-                df_styler = df.head(5)#.style.set_table_attributes("style='display:inline-block'")
+                df_styler = df.head(rows)#.style.set_table_attributes("style='display:inline-block'")
                 if container != '':
                     container += '<hr style="width: 400px; margin-left:0;">'
                 container += df_styler._repr_html_()
 
     if container != '':
+        basewidth = 300
         html = wsp.HTML(string=container)
         html.write_png(real_synth_image_path)
-        display(Image(filename=real_synth_image_path))
+        img = Image(filename=real_synth_image_path)
+        wpercent = (basewidth / float(img.size[0]))
+        hsize = int((float(img.size[1]) * float(wpercent)))
+        img = img.resize((basewidth, hsize), Image.ANTIALIAS)
+        img.save(real_synth_image_resized_path)
+        display(img))
         '''
         file = open(directory + "real_synth_data.html", "w")
         file.write(container)
