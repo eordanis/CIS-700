@@ -84,14 +84,25 @@ def display_synth_data(directory=None, rows=None):
                 container += df_styler._repr_html_()
 
     if container != '':
-        html = wsp.HTML(string=container)
-        html.write_png(real_synth_image_path, optimize_images=False)
-        display(Image(filename=real_synth_image_path))
-        '''
+    
         file = open(directory + "real_synth_data.html", "w")
         file.write(container)
         file.close()
         display_html(container, raw=True)
+        
+        '''
+        #write html as image
+        html = wsp.HTML(string=container)
+        html.write_png(real_synth_image_path, optimize_images=False)
+        display(Image(filename=real_synth_image_path))
+        
+        #resize image
+        from PIL import Image
+
+        real_synth_image_path = directory + "real_synth_data.png"
+        img = Image.open(real_synth_image_path)
+        resized_image = img.resize((1700,1700))
+        display(resized_image)
         '''
 
 
